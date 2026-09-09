@@ -3,130 +3,680 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Numbers Bingo 0–100</title>
+<title>Spanish Numbers Bingo</title>
 <style>
-  :root {
-    --yellow:#fff36a; --yellow-b:#d9c900;
-    --blue:#8fd3ff; --blue-b:#318dc7;
-    --red:#ff987f; --red-b:#cf5c45;
-    --green:#8ddd72; --green-b:#45a13f;
-    --purple:#c9b5f7; --purple-b:#846cc3;
-    --ink:#24324a; --muted:#556173;
+:root{
+  --yellow:#fff36a; --yellow-b:#d9c900;
+  --blue:#8fd3ff; --blue-b:#318dc7;
+  --red:#ff987f; --red-b:#cf5c45;
+  --green:#8ddd72; --green-b:#45a13f;
+  --purple:#c9b5f7; --purple-b:#846cc3;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  padding:18px;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#fff;
+  color:#111;
+}
+.wrap{max-width:1180px;margin:0 auto;text-align:center}
+h1{
+  margin:0;
+  font-size:clamp(58px,8vw,108px);
+  line-height:.95;
+  color:#087ee7;
+  -webkit-text-fill-color:#087ee7;
+  -webkit-text-stroke:3px #000;
+  paint-order:stroke fill;
+  letter-spacing:2px;
+  font-weight:1000;
+  text-shadow:none;
+}
+.instructions{
+  margin:12px 0 18px;
+  font-size:clamp(18px,2.6vw,32px);
+  font-weight:700;
+}
+.board{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:6px;
+  width:100%;
+}
+.header,.cell{
+  border:3px solid #111;
+  border-radius:10px;
+  min-width:0;
+}
+.header{
+  height:70px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:6px;
+  font-size:clamp(16px,2.2vw,29px);
+  font-weight:900;
+}
+.cell{
+  height:145px;
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  user-select:none;
+  isolation:isolate;
+}
+.cell:focus-visible{outline:5px solid #111;outline-offset:2px}
+.number{
+  position:relative;
+  z-index:2;
+  color:#000;
+  font-size:clamp(42px,6vw,76px);
+  font-weight:950;
+  line-height:.9;
+}
+.word{
+  position:relative;
+  z-index:2;
+  color:#000;
+  margin-top:9px;
+  padding:0 5px;
+  width:100%;
+  font-size:clamp(14px,1.8vw,25px);
+  line-height:1.05;
+  font-weight:800;
+  overflow-wrap:anywhere;
+}
+.yellow{background:var(--yellow);border-color:var(--yellow-b)}
+.blue{background:var(--blue);border-color:var(--blue-b)}
+.red{background:var(--red);border-color:var(--red-b)}
+.green{background:var(--green);border-color:var(--green-b)}
+.purple{background:var(--purple);border-color:var(--purple-b)}
+.header.yellow,.header.blue,.header.red,.header.green,.header.purple{border-color:#111}
+
+.free{
+  cursor:pointer;
+}
+.free .word{
+  font-size:clamp(22px,3vw,34px);
+  margin-top:0;
+  color:#000;
+}
+
+.bubble{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:min(112px,78%);
+  aspect-ratio:1;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  z-index:4;
+  pointer-events:none;
+  opacity:.93;
+  border:2px solid rgba(255,255,255,.85);
+  background:
+    radial-gradient(circle at 28% 20%, rgba(255,255,255,.95) 0 5%, rgba(255,255,255,.45) 6% 10%, transparent 21%),
+    radial-gradient(circle at 72% 76%, rgba(255,255,255,.26) 0 7%, transparent 27%),
+    conic-gradient(from 20deg,
+      rgba(255,75,145,.21),
+      rgba(255,217,72,.18),
+      rgba(112,255,203,.18),
+      rgba(88,185,255,.21),
+      rgba(178,111,255,.19),
+      rgba(255,75,145,.21));
+  box-shadow:
+    inset 0 0 13px rgba(255,255,255,.78),
+    inset 8px 9px 18px rgba(255,120,185,.08),
+    inset -8px -9px 18px rgba(75,115,255,.11),
+    0 3px 8px rgba(25,45,80,.17);
+  backdrop-filter:blur(.35px) saturate(1.2);
+  -webkit-backdrop-filter:blur(.35px) saturate(1.2);
+  animation:breathe 4.6s ease-in-out infinite;
+}
+.bubble::before{
+  content:"";
+  position:absolute;
+  width:26%;
+  height:12%;
+  left:17%;
+  top:14%;
+  border-radius:50%;
+  background:rgba(255,255,255,.68);
+  filter:blur(.4px);
+  transform:rotate(-28deg);
+}
+.bubble::after{
+  content:"";
+  position:absolute;
+  inset:7px;
+  border-radius:50%;
+  border-top:2px solid rgba(255,255,255,.8);
+  border-left:1px solid rgba(255,255,255,.38);
+  transform:rotate(-18deg);
+}
+@keyframes breathe{
+  0%{
+    transform:translate(-50%,-50%) translate(0,0) scale(1);
   }
-  *{box-sizing:border-box}
-  body{margin:0;background:#f7f8fb;color:var(--ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-  main{max-width:950px;margin:auto;padding:24px}
-  .top{display:flex;gap:16px;justify-content:space-between;align-items:end;flex-wrap:wrap;margin-bottom:18px}
-  h1{margin:0;font-size:clamp(30px,5vw,56px);letter-spacing:.5px}
-  .sub{margin:4px 0 0;color:var(--muted);font-size:17px}
-  button{font:inherit}
-  .new{border:0;border-radius:14px;padding:12px 18px;background:#24324a;color:white;font-weight:750;cursor:pointer;min-height:46px}
-  .headers{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:8px}
-  .h{border-radius:12px;padding:10px 4px;text-align:center;font-weight:900;font-size:clamp(12px,2vw,18px);letter-spacing:.02em;border:3px solid transparent}
-  .h0{background:var(--yellow);border-color:var(--yellow-b)}
-  .h1{background:var(--blue);border-color:var(--blue-b)}
-  .h2{background:var(--red);border-color:var(--red-b)}
-  .h3{background:var(--green);border-color:var(--green-b)}
-  .h4{background:var(--purple);border-color:var(--purple-b)}
-  .board{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
-  .cell{position:relative;min-height:120px;border-radius:18px;border:4px solid transparent;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:8px;cursor:pointer;user-select:none;overflow:hidden}
-  .cell:focus-visible{outline:4px solid #111;outline-offset:2px}
-  .r0{background:var(--yellow);border-color:var(--yellow-b)}
-  .r1{background:var(--blue);border-color:var(--blue-b)}
-  .r2{background:var(--red);border-color:var(--red-b)}
-  .r3{background:var(--green);border-color:var(--green-b)}
-  .r4{background:var(--purple);border-color:var(--purple-b)}
-  .num{font-size:clamp(34px,5vw,58px);font-weight:900;line-height:1}
-  .word{margin-top:8px;font-size:clamp(12px,1.6vw,18px);font-weight:700;line-height:1.08}
-  .chip{position:absolute;width:72%;aspect-ratio:1;border-radius:50%;background:rgba(255,255,255,.48);border:5px solid rgba(20,30,50,.35);box-shadow:inset 0 0 0 5px rgba(255,255,255,.18);display:none;pointer-events:none}
-  .cell.marked .chip{display:block}
-  .free .word{font-size:clamp(20px,3vw,32px);text-transform:uppercase}
-  .free .num{display:none}
-  .note{margin-top:16px;color:var(--muted);font-size:14px;text-align:center}
-  @media(max-width:620px){
-    main{padding:10px}
-    .headers{gap:5px;margin-bottom:5px}.h{font-size:9px;padding:6px 2px;border-width:2px;border-radius:8px}.board{gap:5px}
-    .cell{min-height:78px;border-width:2px;border-radius:10px;padding:4px}
-    .word{font-size:10px;margin-top:4px}
-    .num{font-size:28px}
-    .chip{border-width:3px}
+  18%{
+    transform:translate(-50%,-50%) translate(1.5px,-2px) scale(1.012);
   }
-  @media print{.new,.note{display:none} body{background:white} main{padding:0}}
+  38%{
+    transform:translate(-50%,-50%) translate(-1px,-3px) scale(.996);
+  }
+  58%{
+    transform:translate(-50%,-50%) translate(-2px,-1px) scale(1.009);
+  }
+  78%{
+    transform:translate(-50%,-50%) translate(1px,1px) scale(1.003);
+  }
+  100%{
+    transform:translate(-50%,-50%) translate(0,0) scale(1);
+  }
+}
+to{opacity:0;transform:rotate(-28deg) scale(.35)}
+}
+28%{
+    transform:translate(-50%,-50%) scale(1.07,0.96);
+    opacity:.9;
+  }
+  52%{
+    transform:translate(-50%,-50%) scale(1.18,1.05);
+    opacity:.62;
+    filter:blur(.2px);
+  }
+  72%{
+    transform:translate(-50%,-50%) scale(1.30,0.92);
+    opacity:.28;
+    filter:blur(.7px);
+  }
+  100%{
+    transform:translate(-50%,-50%) scale(1.42,0.78);
+    opacity:0;
+    filter:blur(1.4px);
+  }
+}
+45%{
+    transform:translate(-50%,-50%) scale(1.02) rotate(7deg);
+    opacity:.72;
+  }
+  100%{
+    transform:translate(-50%,-50%) scale(1.34) rotate(14deg);
+    opacity:0;
+  }
+}
+
+.controls{margin:20px 0 4px}
+button{
+  border:0;
+  border-radius:16px;
+  padding:14px 28px;
+  min-height:52px;
+  background:#087ee7;
+  color:white;
+  font-size:clamp(18px,2vw,26px);
+  font-weight:900;
+  box-shadow:0 5px 0 #075da9;
+  cursor:pointer;
+}
+button:active{transform:translateY(3px);box-shadow:0 2px 0 #075da9}
+
+@media(max-width:760px){
+  body{padding:10px}
+  .board{gap:3px}
+  .header{height:55px;font-size:14px}
+  .cell{height:108px;border-width:2px;border-radius:7px}
+  .number{font-size:42px}
+  .word{font-size:12px;margin-top:5px}
+  .free .word{font-size:20px}
+}
+@media(prefers-reduced-motion:reduce){
+  .bubble,.bubble.popping,.splash{animation:none}
+}
+
+35%{opacity:.8}
+  100%{
+    transform:
+      translate(calc(-50% + var(--dx)),calc(-50% + var(--dy)))
+      rotate(calc(var(--r) + 95deg))
+      scale(.25);
+    opacity:0;
+  }
+}
+
+38%{
+    transform:translate(-50%,-50%) scale(1.03,1.08);
+    opacity:.75;
+  }
+  100%{
+    transform:translate(-50%,-50%) scale(1.30,1.18);
+    opacity:0;
+    border-radius:46% 55% 43% 58%;
+  }
+}
+
+
+/* --- ULTRAREALISTIC SOAP-BUBBLE POP --- */
+.bubble.popping{
+  animation:none !important;
+  overflow:visible;
+}
+.bubble.popping .membrane-tear,
+.bubble.popping .tension-wave,
+.bubble.popping .film-fragment,
+.bubble.popping .microdrop{
+  pointer-events:none;
+}
+
+.membrane-tear{
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  z-index:8;
+  background:
+    radial-gradient(circle at var(--px) var(--py),
+      transparent 0 2%,
+      rgba(255,255,255,.18) 2.5% 3.2%,
+      transparent 3.7% 7%),
+    conic-gradient(from 17deg at var(--px) var(--py),
+      rgba(255,255,255,.0) 0 7deg,
+      rgba(255,255,255,.56) 8deg 10deg,
+      rgba(115,210,255,.25) 11deg 13deg,
+      rgba(255,120,220,.20) 14deg 16deg,
+      rgba(255,255,255,0) 17deg 30deg);
+  -webkit-mask:
+    radial-gradient(circle at var(--px) var(--py),
+      transparent 0 5%,
+      #000 6% 18%,
+      transparent 19% 100%);
+  mask:
+    radial-gradient(circle at var(--px) var(--py),
+      transparent 0 5%,
+      #000 6% 18%,
+      transparent 19% 100%);
+  opacity:.95;
+  animation:tearExpand 270ms cubic-bezier(.12,.72,.18,1) forwards;
+}
+@keyframes tearExpand{
+  0%{
+    -webkit-mask-size:35% 35%;
+    mask-size:35% 35%;
+    -webkit-mask-repeat:no-repeat;
+    mask-repeat:no-repeat;
+    -webkit-mask-position:var(--px) var(--py);
+    mask-position:var(--px) var(--py);
+    opacity:.98;
+  }
+  48%{opacity:.82}
+  100%{
+    -webkit-mask-size:260% 260%;
+    mask-size:260% 260%;
+    -webkit-mask-repeat:no-repeat;
+    mask-repeat:no-repeat;
+    -webkit-mask-position:var(--px) var(--py);
+    mask-position:var(--px) var(--py);
+    opacity:0;
+  }
+}
+
+.tension-wave{
+  position:absolute;
+  left:var(--px);
+  top:var(--py);
+  width:8px;
+  height:8px;
+  margin:-4px 0 0 -4px;
+  border-radius:50%;
+  border:1.6px solid rgba(255,255,255,.82);
+  box-shadow:
+    0 0 3px rgba(110,205,255,.34),
+    inset 0 0 2px rgba(255,135,220,.22);
+  z-index:9;
+  opacity:.9;
+  animation:tensionWave 230ms ease-out forwards;
+}
+@keyframes tensionWave{
+  0%{transform:scale(.25,.18);opacity:.95}
+  55%{transform:scale(8.2,7.5);opacity:.52}
+  100%{transform:scale(13,11.7);opacity:0}
+}
+
+.film-fragment{
+  --tx:0px;
+  --ty:0px;
+  --rot:0deg;
+  --sx:1;
+  --sy:1;
+  position:absolute;
+  left:var(--px);
+  top:var(--py);
+  width:12px;
+  height:6px;
+  margin:-3px 0 0 -6px;
+  z-index:10;
+  border-radius:70% 35% 72% 42% / 55% 65% 40% 60%;
+  border-top:1px solid rgba(255,255,255,.82);
+  border-left:1px solid rgba(255,255,255,.38);
+  background:
+    linear-gradient(130deg,
+      rgba(255,255,255,.68),
+      rgba(110,210,255,.26) 38%,
+      rgba(255,125,220,.22) 68%,
+      rgba(255,255,255,.06));
+  box-shadow:inset 0 0 2px rgba(255,255,255,.72);
+  transform-origin:center;
+  animation:filmFly 290ms cubic-bezier(.16,.68,.22,1) forwards;
+}
+@keyframes filmFly{
+  0%{
+    transform:translate(0,0) rotate(var(--rot)) scale(var(--sx),var(--sy)) skewX(0deg);
+    opacity:.92;
+  }
+  35%{
+    opacity:.78;
+    transform:
+      translate(calc(var(--tx)*.35),calc(var(--ty)*.35))
+      rotate(calc(var(--rot) + 24deg))
+      scale(calc(var(--sx)*.95),calc(var(--sy)*1.08))
+      skewX(8deg);
+  }
+  100%{
+    transform:
+      translate(var(--tx),var(--ty))
+      rotate(calc(var(--rot) + 88deg))
+      scale(calc(var(--sx)*.42),calc(var(--sy)*.62))
+      skewX(18deg);
+    opacity:0;
+  }
+}
+
+.microdrop{
+  --tx:0px;
+  --ty:0px;
+  --d:2px;
+  position:absolute;
+  left:var(--px);
+  top:var(--py);
+  width:var(--d);
+  height:var(--d);
+  margin:calc(var(--d)*-.5) 0 0 calc(var(--d)*-.5);
+  z-index:11;
+  border-radius:50%;
+  background:rgba(255,255,255,.72);
+  box-shadow:0 0 1px rgba(105,205,255,.42);
+  opacity:.88;
+  animation:microFly 240ms ease-out forwards;
+}
+@keyframes microFly{
+  0%{transform:translate(0,0) scale(1);opacity:.9}
+  100%{transform:translate(var(--tx),var(--ty)) scale(.35);opacity:0}
+}
+
+/* The original membrane loses continuity from the click point outward,
+   rather than shrinking or fading as a whole. */
+.bubble.popping{
+  -webkit-mask:
+    radial-gradient(circle at var(--px) var(--py),
+      transparent 0 0%,
+      #000 1% 100%);
+  mask:
+    radial-gradient(circle at var(--px) var(--py),
+      transparent 0 0%,
+      #000 1% 100%);
+  animation:membraneCollapse 285ms cubic-bezier(.12,.7,.18,1) forwards !important;
+}
+@keyframes membraneCollapse{
+  0%{
+    -webkit-mask:
+      radial-gradient(circle at var(--px) var(--py),
+        transparent 0 1%,
+        #000 1.5% 100%);
+    mask:
+      radial-gradient(circle at var(--px) var(--py),
+        transparent 0 1%,
+        #000 1.5% 100%);
+    filter:none;
+    opacity:.95;
+  }
+  22%{
+    -webkit-mask:
+      radial-gradient(circle at var(--px) var(--py),
+        transparent 0 8%,
+        #000 10% 100%);
+    mask:
+      radial-gradient(circle at var(--px) var(--py),
+        transparent 0 8%,
+        #000 10% 100%);
+    opacity:.92;
+  }
+  52%{
+    -webkit-mask:
+      radial-gradient(circle at var(--px) var(--py),
+        transparent 0 35%,
+        #000 38% 100%);
+    mask:
+      radial-gradient(circle at var(--px) var(--py),
+        transparent 0 35%,
+        #000 38% 100%);
+    opacity:.82;
+  }
+  78%{
+    -webkit-mask:
+      radial-gradient(circle at var(--px) var(--py),
+        transparent 0 67%,
+        #000 71% 100%);
+    mask:
+      radial-gradient(circle at var(--px) var(--py),
+        transparent 0 67%,
+        #000 71% 100%);
+    opacity:.58;
+  }
+  100%{
+    -webkit-mask:
+      radial-gradient(circle at var(--px) var(--py),
+        transparent 0 103%,
+        #000 104% 100%);
+    mask:
+      radial-gradient(circle at var(--px) var(--py),
+        transparent 0 103%,
+        #000 104% 100%);
+    opacity:0;
+  }
+}
+
 </style>
 </head>
 <body>
-<main>
-  <div class="top">
-    <div>
-      <h1>BINGO · 0–100</h1>
-      <p class="sub">Click a square to place a marker. Click it again to remove the marker.</p>
-    </div>
-    <button class="new" id="newCard" type="button">Generate a new card</button>
-  </div>
-  <div class="headers" aria-hidden="true">
-      <div class="h h0">AMARILLO</div>
-      <div class="h h1">AZUL</div>
-      <div class="h h2">ROJO</div>
-      <div class="h h3">VERDE</div>
-      <div class="h h4">MORADO</div>
-    </div>
-    <div class="board" id="board" aria-label="Bingo card"></div>
-  <div class="note">A different Bingo card is generated each time this page is opened.</div>
-</main>
+<div class="wrap">
+  <h1>¡BINGO!</h1>
+  <div class="instructions">Click on a box to mark it. Click again to pop the bubble!</div>
+  <div id="board" class="board" aria-label="Spanish numbers bingo card"></div>
+  <div class="controls"><button id="newCard" type="button">Generate a new card</button></div>
+</div>
 <script>
-(() => {
-  const names = {"0": "cero", "1": "uno", "2": "dos", "3": "tres", "4": "cuatro", "5": "cinco", "6": "seis", "7": "siete", "8": "ocho", "9": "nueve", "10": "diez", "11": "once", "12": "doce", "13": "trece", "14": "catorce", "15": "quince", "16": "dieciséis", "17": "diecisiete", "18": "dieciocho", "19": "diecinueve", "20": "veinte", "21": "veintiuno", "22": "veintidós", "23": "veintitrés", "24": "veinticuatro", "25": "veinticinco", "26": "veintiséis", "27": "veintisiete", "28": "veintiocho", "29": "veintinueve", "30": "treinta", "31": "treinta y uno", "32": "treinta y dos", "33": "treinta y tres", "34": "treinta y cuatro", "35": "treinta y cinco", "36": "treinta y seis", "37": "treinta y siete", "38": "treinta y ocho", "39": "treinta y nueve", "40": "cuarenta", "41": "cuarenta y uno", "42": "cuarenta y dos", "43": "cuarenta y tres", "44": "cuarenta y cuatro", "45": "cuarenta y cinco", "46": "cuarenta y seis", "47": "cuarenta y siete", "48": "cuarenta y ocho", "49": "cuarenta y nueve", "50": "cincuenta", "51": "cincuenta y uno", "52": "cincuenta y dos", "53": "cincuenta y tres", "54": "cincuenta y cuatro", "55": "cincuenta y cinco", "56": "cincuenta y seis", "57": "cincuenta y siete", "58": "cincuenta y ocho", "59": "cincuenta y nueve", "60": "sesenta", "61": "sesenta y uno", "62": "sesenta y dos", "63": "sesenta y tres", "64": "sesenta y cuatro", "65": "sesenta y cinco", "66": "sesenta y seis", "67": "sesenta y siete", "68": "sesenta y ocho", "69": "sesenta y nueve", "70": "setenta", "71": "setenta y uno", "72": "setenta y dos", "73": "setenta y tres", "74": "setenta y cuatro", "75": "setenta y cinco", "76": "setenta y seis", "77": "setenta y siete", "78": "setenta y ocho", "79": "setenta y nueve", "80": "ochenta", "81": "ochenta y uno", "82": "ochenta y dos", "83": "ochenta y tres", "84": "ochenta y cuatro", "85": "ochenta y cinco", "86": "ochenta y seis", "87": "ochenta y siete", "88": "ochenta y ocho", "89": "ochenta y nueve", "90": "noventa", "91": "noventa y uno", "92": "noventa y dos", "93": "noventa y tres", "94": "noventa y cuatro", "95": "noventa y cinco", "96": "noventa y seis", "97": "noventa y siete", "98": "noventa y ocho", "99": "noventa y nueve", "100": "cien"};
-  const board = document.getElementById('board');
-  const newCard = document.getElementById('newCard');
+(()=>{
+  const board=document.getElementById('board');
+  const newCard=document.getElementById('newCard');
 
-  function shuffle(a) {
-    a = a.slice();
-    for (let i=a.length-1;i>0;i--) {
+  const groups=[
+    {name:'AMARILLO', cls:'yellow', start:0, end:20, count:5},
+    {name:'AZUL', cls:'blue', start:21, end:40, count:5},
+    {name:'ROJO', cls:'red', start:41, end:60, count:4},
+    {name:'VERDE', cls:'green', start:61, end:80, count:5},
+    {name:'MORADO', cls:'purple', start:81, end:100, count:5}
+  ];
+
+  function numberWord(n){
+    const base={
+      0:'cero',1:'uno',2:'dos',3:'tres',4:'cuatro',5:'cinco',6:'seis',7:'siete',8:'ocho',9:'nueve',
+      10:'diez',11:'once',12:'doce',13:'trece',14:'catorce',15:'quince',16:'dieciséis',17:'diecisiete',
+      18:'dieciocho',19:'diecinueve',20:'veinte',21:'veintiuno',22:'veintidós',23:'veintitrés',
+      24:'veinticuatro',25:'veinticinco',26:'veintiséis',27:'veintisiete',28:'veintiocho',29:'veintinueve',
+      30:'treinta',40:'cuarenta',50:'cincuenta',60:'sesenta',70:'setenta',80:'ochenta',90:'noventa',100:'cien'
+    };
+    if(base[n]) return base[n];
+    const tens=Math.floor(n/10)*10, ones=n%10;
+    return base[tens]+' y '+base[ones];
+  }
+
+  function sample(start,end,count){
+    const a=[];
+    for(let n=start;n<=end;n++) a.push(n);
+    for(let i=a.length-1;i>0;i--){
       const j=Math.floor(Math.random()*(i+1));
       [a[i],a[j]]=[a[j],a[i]];
     }
-    return a;
+    return a.slice(0,count);
   }
 
-  function makeCard() {
-    board.innerHTML='';
-    const picked = shuffle(Array.from({length:101},(_,i)=>i)).slice(0,24);
-    picked.splice(12,0,null);
+  function markCell(cell,event){
+    const existing=cell.querySelector('.bubble');
 
-    picked.forEach((n,i)=>{
-      const cell=document.createElement('button');
-      cell.type='button';
-      cell.className='cell r'+(i%5)+(n===null?' free':'');
-      cell.setAttribute('aria-pressed','false');
+    if(!existing){
+      const b=document.createElement('span');
+      b.className='bubble';
+      b.setAttribute('aria-hidden','true');
+      cell.appendChild(b);
+      cell.setAttribute('aria-pressed','true');
+      return;
+    }
 
-      const num=document.createElement('div');
-      num.className='num';
-      num.textContent=n===null?'':n;
+    if(existing.classList.contains('popping')) return;
 
-      const word=document.createElement('div');
-      word.className='word';
-      word.textContent=n===null?'FREE':names[n];
+    const rect=existing.getBoundingClientRect();
+    const clickX=event ? Math.max(0,Math.min(rect.width,event.clientX-rect.left)) : rect.width/2;
+    const clickY=event ? Math.max(0,Math.min(rect.height,event.clientY-rect.top)) : rect.height/2;
+    const px=(clickX/rect.width)*100;
+    const py=(clickY/rect.height)*100;
 
-      const chip=document.createElement('div');
-      chip.className='chip';
+    existing.style.setProperty('--px',px+'%');
+    existing.style.setProperty('--py',py+'%');
+    existing.classList.add('popping');
+    cell.setAttribute('aria-pressed','false');
 
-      cell.append(num,word,chip);
+    const tear=document.createElement('span');
+    tear.className='membrane-tear';
+    tear.style.setProperty('--px',px+'%');
+    tear.style.setProperty('--py',py+'%');
 
-      if(n===null){
-        cell.classList.add('marked');
-        cell.setAttribute('aria-pressed','true');
-      }
+    const wave=document.createElement('span');
+    wave.className='tension-wave';
+    wave.style.setProperty('--px',px+'%');
+    wave.style.setProperty('--py',py+'%');
 
-      cell.addEventListener('click',()=>{
-        cell.classList.toggle('marked');
-        cell.setAttribute('aria-pressed',cell.classList.contains('marked')?'true':'false');
-      });
-      board.appendChild(cell);
+    existing.append(tear,wave);
+
+    // Curved translucent membrane fragments. Small count, irregular trajectories.
+    const fragments=[
+      [-28,-12,-28,1.0,.72],[-18,-30,12,.82,.58],[4,-36,58,.72,.52],
+      [24,-27,104,.9,.62],[34,-8,148,.78,.56],[31,17,186,.88,.66],
+      [15,30,232,.72,.54],[-8,33,274,.82,.61],[-27,23,316,.9,.63],
+      [-34,4,352,.68,.48]
+    ];
+    fragments.forEach(([tx,ty,rot,sx,sy])=>{
+      const f=document.createElement('span');
+      f.className='film-fragment';
+      f.style.setProperty('--px',px+'%');
+      f.style.setProperty('--py',py+'%');
+      f.style.setProperty('--tx',tx+'px');
+      f.style.setProperty('--ty',ty+'px');
+      f.style.setProperty('--rot',rot+'deg');
+      f.style.setProperty('--sx',sx);
+      f.style.setProperty('--sy',sy);
+      existing.appendChild(f);
     });
+
+    // Extremely small transparent droplets around the rupture.
+    const drops=[
+      [-20,-8,1.5],[-13,-20,2],[-2,-25,1.2],[10,-21,1.6],[21,-11,1.4],
+      [25,1,1.8],[18,14,1.3],[8,21,1.7],[-6,23,1.2],[-18,15,1.6],
+      [-24,4,1.3],[5,-12,1.1],[-9,8,1.1],[13,7,1.2]
+    ];
+    drops.forEach(([tx,ty,d])=>{
+      const m=document.createElement('span');
+      m.className='microdrop';
+      m.style.setProperty('--px',px+'%');
+      m.style.setProperty('--py',py+'%');
+      m.style.setProperty('--tx',tx+'px');
+      m.style.setProperty('--ty',ty+'px');
+      m.style.setProperty('--d',d+'px');
+      existing.appendChild(m);
+    });
+
+    setTimeout(()=>existing.remove(),320);
   }
 
-  newCard.addEventListener('click', makeCard);
-  makeCard();
+  function makeCell(n,cls){
+    const cell=document.createElement('button');
+    cell.type='button';
+    cell.className='cell '+cls;
+    cell.setAttribute('aria-label',n+' '+numberWord(n));
+    cell.setAttribute('aria-pressed','false');
+
+    const num=document.createElement('div');
+    num.className='number';
+    num.textContent=n;
+    const word=document.createElement('div');
+    word.className='word';
+    word.textContent=numberWord(n);
+    cell.append(num,word);
+    cell.addEventListener('click',(event)=>markCell(cell,event));
+    return cell;
+  }
+
+  function makeFree(){
+    const cell=document.createElement('button');
+    cell.type='button';
+    cell.className='cell red free';
+    cell.setAttribute('aria-label','Free space');
+    cell.setAttribute('aria-pressed','false');
+
+    const word=document.createElement('div');
+    word.className='word';
+    word.textContent='FREE';
+
+    cell.appendChild(word);
+    cell.addEventListener('click',(event)=>markCell(cell,event));
+    return cell;
+  }
+
+  function render(){
+    board.replaceChildren();
+
+    groups.forEach(g=>{
+      const h=document.createElement('div');
+      h.className='header '+g.cls;
+      h.textContent=g.name;
+      board.appendChild(h);
+    });
+
+    const cols=groups.map(g=>sample(g.start,g.end,g.count));
+    let redIndex=0;
+
+    for(let row=0;row<5;row++){
+      for(let col=0;col<5;col++){
+        if(row===2 && col===2){
+          board.appendChild(makeFree());
+          continue;
+        }
+        let n;
+        if(col===2){
+          n=cols[col][redIndex++];
+        }else{
+          n=cols[col][row];
+        }
+        board.appendChild(makeCell(n,groups[col].cls));
+      }
+    }
+  }
+
+  newCard.addEventListener('click',render);
+  render();
 })();
 </script>
 </body>
