@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Spanish Alphabet Bingo</title>
+<style>
+:root {
+  --yellow:#fff36a; --yellow-b:#d9c900;
+  --blue:#8fd3ff; --blue-b:#318dc7;
+  --red:#ff987f; --red-b:#cf5c45;
+  --ink:#24324a; --muted:#5e6878;
+}
+*{box-sizing:border-box}
+body{margin:0;background:#f7f8fb;color:var(--ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+main{max-width:760px;margin:auto;padding:24px}
+h1{margin:0;font-size:clamp(34px,6vw,62px);text-align:center}
+.sub{margin:8px 0 20px;text-align:center;color:var(--muted);font-size:16px}
+.headers{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px}
+.h{border-radius:14px;padding:10px 4px;text-align:center;font-weight:900;font-size:clamp(14px,2.2vw,20px);border:3px solid transparent}
+.h0{background:var(--yellow);border-color:var(--yellow-b)}
+.h1{background:var(--blue);border-color:var(--blue-b)}
+.h2{background:var(--red);border-color:var(--red-b)}
+.board{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.cell{position:relative;min-height:150px;border-radius:18px;border:4px solid transparent;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:10px;cursor:pointer;user-select:none;overflow:hidden}
+.c0{background:var(--yellow);border-color:var(--yellow-b)}
+.c1{background:var(--blue);border-color:var(--blue-b)}
+.c2{background:var(--red);border-color:var(--red-b)}
+.letter{font-size:clamp(62px,10vw,104px);font-weight:950;line-height:.9}
+.name{margin-top:10px;font-size:clamp(18px,3vw,28px);font-weight:800}
+.chip{position:absolute;width:68%;aspect-ratio:1;border-radius:50%;background:rgba(255,255,255,.46);border:6px solid rgba(25,35,50,.32);box-shadow:inset 0 0 0 5px rgba(255,255,255,.16);display:none;pointer-events:none}
+.cell.marked .chip{display:block}
+.cell:focus-visible{outline:4px solid #111;outline-offset:2px}
+.note{text-align:center;color:var(--muted);font-size:14px;margin-top:16px}
+@media(max-width:560px){
+ main{padding:12px} .headers,.board{gap:6px} .h{font-size:11px;padding:7px 2px;border-width:2px}
+ .cell{min-height:105px;border-width:2px;border-radius:12px;padding:6px}
+ .letter{font-size:48px} .name{font-size:15px;margin-top:6px} .chip{border-width:4px}
+}
+</style>
+</head>
+<body>
+<main>
+  <h1>BINGO · EL ALFABETO</h1>
+  <p class="sub">Click a square to place a marker. Click it again to remove the marker.</p>
+
+  <div class="headers">
+    <div class="h h0">AMARILLO</div>
+    <div class="h h1">AZUL</div>
+    <div class="h h2">ROJO</div>
+  </div>
+
+  <div class="board" id="board" aria-label="Spanish alphabet Bingo card"></div>
+  <div class="note">A different Bingo card is generated each time this page is opened.</div>
+</main>
+
+<script>
+(() => {
+  const groups = [[["A", "a"], ["B", "be"], ["C", "ce"], ["D", "de"], ["E", "e"], ["F", "efe"], ["G", "ge"], ["H", "hache"], ["I", "i"]], [["J", "jota"], ["K", "ka"], ["L", "ele"], ["M", "eme"], ["N", "ene"], ["Ñ", "eñe"], ["O", "o"], ["P", "pe"], ["Q", "cu"]], [["R", "erre"], ["S", "ese"], ["T", "te"], ["U", "u"], ["V", "uve"], ["W", "uve doble"], ["X", "equis"], ["Y", "ye"], ["Z", "zeta"]]];
+  const board = document.getElementById('board');
+
+  function shuffle(a) {
+    a=a.slice();
+    for(let i=a.length-1;i>0;i--) {
+      const j=Math.floor(Math.random()*(i+1));
+      [a[i],a[j]]=[a[j],a[i]];
+    }
+    return a;
+  }
+
+  function makeCard() {
+    board.innerHTML='';
+    const selected = groups.map(g => shuffle(g).slice(0,3));
+
+    // Rows are horizontal; each column keeps its fixed color/group.
+    for(let row=0; row<3; row++) {
+      for(let col=0; col<3; col++) {
+        const [letter,name] = selected[col][row];
+        const cell=document.createElement('button');
+        cell.type='button';
+        cell.className='cell c'+col;
+        cell.setAttribute('aria-pressed','false');
+
+        const l=document.createElement('div');
+        l.className='letter';
+        l.textContent=letter;
+
+        const n=document.createElement('div');
+        n.className='name';
+        n.textContent=name;
+
+        const chip=document.createElement('div');
+        chip.className='chip';
+
+        cell.append(l,n,chip);
+        cell.addEventListener('click',()=>{
+          cell.classList.toggle('marked');
+          cell.setAttribute('aria-pressed',cell.classList.contains('marked')?'true':'false');
+        });
+        board.appendChild(cell);
+      }
+    }
+  }
+
+  makeCard();
+})();
+</script>
+</body>
+</html>
