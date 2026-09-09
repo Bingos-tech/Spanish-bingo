@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Numbers Bingo 0–100</title>
+<style>
+  :root {
+    --yellow:#fff36a; --yellow-b:#d9c900;
+    --blue:#8fd3ff; --blue-b:#318dc7;
+    --red:#ff987f; --red-b:#cf5c45;
+    --green:#8ddd72; --green-b:#45a13f;
+    --purple:#c9b5f7; --purple-b:#846cc3;
+    --ink:#24324a; --muted:#556173;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#f7f8fb;color:var(--ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+  main{max-width:950px;margin:auto;padding:24px}
+  .top{display:flex;gap:16px;justify-content:space-between;align-items:end;flex-wrap:wrap;margin-bottom:18px}
+  h1{margin:0;font-size:clamp(30px,5vw,56px);letter-spacing:.5px}
+  .sub{margin:4px 0 0;color:var(--muted);font-size:17px}
+  button{font:inherit}
+  .new{border:0;border-radius:14px;padding:12px 18px;background:#24324a;color:white;font-weight:750;cursor:pointer;min-height:46px}
+  .headers{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:8px}
+  .h{border-radius:12px;padding:10px 4px;text-align:center;font-weight:900;font-size:clamp(12px,2vw,18px);letter-spacing:.02em;border:3px solid transparent}
+  .h0{background:var(--yellow);border-color:var(--yellow-b)}
+  .h1{background:var(--blue);border-color:var(--blue-b)}
+  .h2{background:var(--red);border-color:var(--red-b)}
+  .h3{background:var(--green);border-color:var(--green-b)}
+  .h4{background:var(--purple);border-color:var(--purple-b)}
+  .board{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+  .cell{position:relative;min-height:120px;border-radius:18px;border:4px solid transparent;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:8px;cursor:pointer;user-select:none;overflow:hidden}
+  .cell:focus-visible{outline:4px solid #111;outline-offset:2px}
+  .r0{background:var(--yellow);border-color:var(--yellow-b)}
+  .r1{background:var(--blue);border-color:var(--blue-b)}
+  .r2{background:var(--red);border-color:var(--red-b)}
+  .r3{background:var(--green);border-color:var(--green-b)}
+  .r4{background:var(--purple);border-color:var(--purple-b)}
+  .num{font-size:clamp(34px,5vw,58px);font-weight:900;line-height:1}
+  .word{margin-top:8px;font-size:clamp(12px,1.6vw,18px);font-weight:700;line-height:1.08}
+  .chip{position:absolute;width:72%;aspect-ratio:1;border-radius:50%;background:rgba(255,255,255,.48);border:5px solid rgba(20,30,50,.35);box-shadow:inset 0 0 0 5px rgba(255,255,255,.18);display:none;pointer-events:none}
+  .cell.marked .chip{display:block}
+  .free .word{font-size:clamp(20px,3vw,32px);text-transform:uppercase}
+  .free .num{display:none}
+  .note{margin-top:16px;color:var(--muted);font-size:14px;text-align:center}
+  @media(max-width:620px){
+    main{padding:10px}
+    .headers{gap:5px;margin-bottom:5px}.h{font-size:9px;padding:6px 2px;border-width:2px;border-radius:8px}.board{gap:5px}
+    .cell{min-height:78px;border-width:2px;border-radius:10px;padding:4px}
+    .word{font-size:10px;margin-top:4px}
+    .num{font-size:28px}
+    .chip{border-width:3px}
+  }
+  @media print{.new,.note{display:none} body{background:white} main{padding:0}}
+</style>
+</head>
+<body>
+<main>
+  <div class="top">
+    <div>
+      <h1>BINGO · 0–100</h1>
+      <p class="sub">Click a square to place a marker. Click it again to remove the marker.</p>
+    </div>
+    <button class="new" id="newCard" type="button">Generate a new card</button>
+  </div>
+  <div class="headers" aria-hidden="true">
+      <div class="h h0">AMARILLO</div>
+      <div class="h h1">AZUL</div>
+      <div class="h h2">ROJO</div>
+      <div class="h h3">VERDE</div>
+      <div class="h h4">MORADO</div>
+    </div>
+    <div class="board" id="board" aria-label="Bingo card"></div>
+  <div class="note">A different Bingo card is generated each time this page is opened.</div>
+</main>
+<script>
+(() => {
+  const names = {"0": "cero", "1": "uno", "2": "dos", "3": "tres", "4": "cuatro", "5": "cinco", "6": "seis", "7": "siete", "8": "ocho", "9": "nueve", "10": "diez", "11": "once", "12": "doce", "13": "trece", "14": "catorce", "15": "quince", "16": "dieciséis", "17": "diecisiete", "18": "dieciocho", "19": "diecinueve", "20": "veinte", "21": "veintiuno", "22": "veintidós", "23": "veintitrés", "24": "veinticuatro", "25": "veinticinco", "26": "veintiséis", "27": "veintisiete", "28": "veintiocho", "29": "veintinueve", "30": "treinta", "31": "treinta y uno", "32": "treinta y dos", "33": "treinta y tres", "34": "treinta y cuatro", "35": "treinta y cinco", "36": "treinta y seis", "37": "treinta y siete", "38": "treinta y ocho", "39": "treinta y nueve", "40": "cuarenta", "41": "cuarenta y uno", "42": "cuarenta y dos", "43": "cuarenta y tres", "44": "cuarenta y cuatro", "45": "cuarenta y cinco", "46": "cuarenta y seis", "47": "cuarenta y siete", "48": "cuarenta y ocho", "49": "cuarenta y nueve", "50": "cincuenta", "51": "cincuenta y uno", "52": "cincuenta y dos", "53": "cincuenta y tres", "54": "cincuenta y cuatro", "55": "cincuenta y cinco", "56": "cincuenta y seis", "57": "cincuenta y siete", "58": "cincuenta y ocho", "59": "cincuenta y nueve", "60": "sesenta", "61": "sesenta y uno", "62": "sesenta y dos", "63": "sesenta y tres", "64": "sesenta y cuatro", "65": "sesenta y cinco", "66": "sesenta y seis", "67": "sesenta y siete", "68": "sesenta y ocho", "69": "sesenta y nueve", "70": "setenta", "71": "setenta y uno", "72": "setenta y dos", "73": "setenta y tres", "74": "setenta y cuatro", "75": "setenta y cinco", "76": "setenta y seis", "77": "setenta y siete", "78": "setenta y ocho", "79": "setenta y nueve", "80": "ochenta", "81": "ochenta y uno", "82": "ochenta y dos", "83": "ochenta y tres", "84": "ochenta y cuatro", "85": "ochenta y cinco", "86": "ochenta y seis", "87": "ochenta y siete", "88": "ochenta y ocho", "89": "ochenta y nueve", "90": "noventa", "91": "noventa y uno", "92": "noventa y dos", "93": "noventa y tres", "94": "noventa y cuatro", "95": "noventa y cinco", "96": "noventa y seis", "97": "noventa y siete", "98": "noventa y ocho", "99": "noventa y nueve", "100": "cien"};
+  const board = document.getElementById('board');
+  const newCard = document.getElementById('newCard');
+
+  function shuffle(a) {
+    a = a.slice();
+    for (let i=a.length-1;i>0;i--) {
+      const j=Math.floor(Math.random()*(i+1));
+      [a[i],a[j]]=[a[j],a[i]];
+    }
+    return a;
+  }
+
+  function makeCard() {
+    board.innerHTML='';
+    const picked = shuffle(Array.from({length:101},(_,i)=>i)).slice(0,24);
+    picked.splice(12,0,null);
+
+    picked.forEach((n,i)=>{
+      const cell=document.createElement('button');
+      cell.type='button';
+      cell.className='cell r'+(i%5)+(n===null?' free':'');
+      cell.setAttribute('aria-pressed','false');
+
+      const num=document.createElement('div');
+      num.className='num';
+      num.textContent=n===null?'':n;
+
+      const word=document.createElement('div');
+      word.className='word';
+      word.textContent=n===null?'FREE':names[n];
+
+      const chip=document.createElement('div');
+      chip.className='chip';
+
+      cell.append(num,word,chip);
+
+      if(n===null){
+        cell.classList.add('marked');
+        cell.setAttribute('aria-pressed','true');
+      }
+
+      cell.addEventListener('click',()=>{
+        cell.classList.toggle('marked');
+        cell.setAttribute('aria-pressed',cell.classList.contains('marked')?'true':'false');
+      });
+      board.appendChild(cell);
+    });
+  }
+
+  newCard.addEventListener('click', makeCard);
+  makeCard();
+})();
+</script>
+</body>
+</html>
