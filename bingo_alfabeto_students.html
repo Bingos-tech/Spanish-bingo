@@ -12,8 +12,13 @@
   --ink:#24324a; --muted:#5e6878;
 }
 *{box-sizing:border-box}
-body{margin:0;background:#f7f8fb;color:var(--ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-main{max-width:760px;margin:auto;padding:24px}
+body{
+  margin:0;
+  background:#f7f8fb;
+  color:var(--ink);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif
+}
+main{max-width:760px;margin:auto;padding:24px;text-align:center}
 h1{margin:0;font-size:clamp(34px,6vw,62px);text-align:center}
 .sub{margin:8px 0 20px;text-align:center;color:var(--muted);font-size:16px}
 .headers{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px}
@@ -22,27 +27,255 @@ h1{margin:0;font-size:clamp(34px,6vw,62px);text-align:center}
 .h1{background:var(--blue);border-color:var(--blue-b)}
 .h2{background:var(--red);border-color:var(--red-b)}
 .board{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.cell{position:relative;min-height:150px;border-radius:18px;border:4px solid transparent;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:10px;cursor:pointer;user-select:none;overflow:hidden}
+.cell{
+  position:relative;
+  min-height:150px;
+  border-radius:18px;
+  border:4px solid transparent;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:10px;
+  cursor:pointer;
+  user-select:none;
+  overflow:hidden;
+  isolation:isolate;
+}
 .c0{background:var(--yellow);border-color:var(--yellow-b)}
 .c1{background:var(--blue);border-color:var(--blue-b)}
 .c2{background:var(--red);border-color:var(--red-b)}
-.letter{font-size:clamp(62px,10vw,104px);font-weight:950;line-height:.9}
-.name{margin-top:10px;font-size:clamp(18px,3vw,28px);font-weight:800}
-.chip{position:absolute;width:68%;aspect-ratio:1;border-radius:50%;background:rgba(255,255,255,.46);border:6px solid rgba(25,35,50,.32);box-shadow:inset 0 0 0 5px rgba(255,255,255,.16);display:none;pointer-events:none}
-.cell.marked .chip{display:block}
+.letter{position:relative;z-index:2;font-size:clamp(62px,10vw,104px);font-weight:950;line-height:.9;color:#000}
+.name{position:relative;z-index:2;margin-top:10px;font-size:clamp(18px,3vw,28px);font-weight:800;color:#000}
+
+.bubble{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:min(112px,78%);
+  aspect-ratio:1;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  z-index:4;
+  pointer-events:none;
+  opacity:.93;
+  border:2px solid rgba(255,255,255,.85);
+  background:
+    radial-gradient(circle at 28% 20%, rgba(255,255,255,.95) 0 5%, rgba(255,255,255,.45) 6% 10%, transparent 21%),
+    radial-gradient(circle at 72% 76%, rgba(255,255,255,.26) 0 7%, transparent 27%),
+    conic-gradient(from 20deg,
+      rgba(255,75,145,.21),
+      rgba(255,217,72,.18),
+      rgba(112,255,203,.18),
+      rgba(88,185,255,.21),
+      rgba(178,111,255,.19),
+      rgba(255,75,145,.21));
+  box-shadow:
+    inset 0 0 13px rgba(255,255,255,.78),
+    inset 8px 9px 18px rgba(255,120,185,.08),
+    inset -8px -9px 18px rgba(75,115,255,.11),
+    0 3px 8px rgba(25,45,80,.17);
+  backdrop-filter:blur(.35px) saturate(1.2);
+  -webkit-backdrop-filter:blur(.35px) saturate(1.2);
+  animation:breathe 4.6s ease-in-out infinite;
+}
+.bubble::before{
+  content:"";
+  position:absolute;
+  width:26%;
+  height:12%;
+  left:17%;
+  top:14%;
+  border-radius:50%;
+  background:rgba(255,255,255,.68);
+  filter:blur(.4px);
+  transform:rotate(-28deg);
+}
+.bubble::after{
+  content:"";
+  position:absolute;
+  inset:7px;
+  border-radius:50%;
+  border-top:2px solid rgba(255,255,255,.8);
+  border-left:1px solid rgba(255,255,255,.38);
+  transform:rotate(-18deg);
+}
+@keyframes breathe{
+  0%{transform:translate(-50%,-50%) translate(0,0) scale(1)}
+  18%{transform:translate(-50%,-50%) translate(1.5px,-2px) scale(1.012)}
+  38%{transform:translate(-50%,-50%) translate(-1px,-3px) scale(.996)}
+  58%{transform:translate(-50%,-50%) translate(-2px,-1px) scale(1.009)}
+  78%{transform:translate(-50%,-50%) translate(1px,1px) scale(1.003)}
+  100%{transform:translate(-50%,-50%) translate(0,0) scale(1)}
+}
+
+.bubble.popping{
+  animation:none !important;
+  overflow:visible;
+  -webkit-mask:radial-gradient(circle at var(--px) var(--py),transparent 0 0%,#000 1% 100%);
+  mask:radial-gradient(circle at var(--px) var(--py),transparent 0 0%,#000 1% 100%);
+  animation:membraneCollapse 285ms cubic-bezier(.12,.7,.18,1) forwards !important;
+}
+.membrane-tear{
+  position:absolute; inset:0; border-radius:50%; z-index:8;
+  background:
+    radial-gradient(circle at var(--px) var(--py),
+      transparent 0 2%, rgba(255,255,255,.18) 2.5% 3.2%, transparent 3.7% 7%),
+    conic-gradient(from 17deg at var(--px) var(--py),
+      rgba(255,255,255,0) 0 7deg,
+      rgba(255,255,255,.56) 8deg 10deg,
+      rgba(115,210,255,.25) 11deg 13deg,
+      rgba(255,120,220,.20) 14deg 16deg,
+      rgba(255,255,255,0) 17deg 30deg);
+  -webkit-mask:radial-gradient(circle at var(--px) var(--py),transparent 0 5%,#000 6% 18%,transparent 19% 100%);
+  mask:radial-gradient(circle at var(--px) var(--py),transparent 0 5%,#000 6% 18%,transparent 19% 100%);
+  opacity:.95;
+  animation:tearExpand 270ms cubic-bezier(.12,.72,.18,1) forwards;
+}
+@keyframes tearExpand{
+  0%{
+    -webkit-mask-size:35% 35%; mask-size:35% 35%;
+    -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
+    -webkit-mask-position:var(--px) var(--py); mask-position:var(--px) var(--py);
+    opacity:.98;
+  }
+  48%{opacity:.82}
+  100%{
+    -webkit-mask-size:260% 260%; mask-size:260% 260%;
+    -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
+    -webkit-mask-position:var(--px) var(--py); mask-position:var(--px) var(--py);
+    opacity:0;
+  }
+}
+.tension-wave{
+  position:absolute;
+  left:var(--px); top:var(--py);
+  width:8px; height:8px;
+  margin:-4px 0 0 -4px;
+  border-radius:50%;
+  border:1.6px solid rgba(255,255,255,.82);
+  box-shadow:0 0 3px rgba(110,205,255,.34), inset 0 0 2px rgba(255,135,220,.22);
+  z-index:9; opacity:.9;
+  animation:tensionWave 230ms ease-out forwards;
+}
+@keyframes tensionWave{
+  0%{transform:scale(.25,.18);opacity:.95}
+  55%{transform:scale(8.2,7.5);opacity:.52}
+  100%{transform:scale(13,11.7);opacity:0}
+}
+.film-fragment{
+  --tx:0px; --ty:0px; --rot:0deg; --sx:1; --sy:1;
+  position:absolute;
+  left:var(--px); top:var(--py);
+  width:12px; height:6px;
+  margin:-3px 0 0 -6px;
+  z-index:10;
+  border-radius:70% 35% 72% 42% / 55% 65% 40% 60%;
+  border-top:1px solid rgba(255,255,255,.82);
+  border-left:1px solid rgba(255,255,255,.38);
+  background:linear-gradient(130deg,rgba(255,255,255,.68),rgba(110,210,255,.26) 38%,rgba(255,125,220,.22) 68%,rgba(255,255,255,.06));
+  box-shadow:inset 0 0 2px rgba(255,255,255,.72);
+  transform-origin:center;
+  animation:filmFly 290ms cubic-bezier(.16,.68,.22,1) forwards;
+}
+@keyframes filmFly{
+  0%{transform:translate(0,0) rotate(var(--rot)) scale(var(--sx),var(--sy));opacity:.92}
+  35%{
+    opacity:.78;
+    transform:translate(calc(var(--tx)*.35),calc(var(--ty)*.35))
+      rotate(calc(var(--rot) + 24deg))
+      scale(calc(var(--sx)*.95),calc(var(--sy)*1.08))
+      skewX(8deg);
+  }
+  100%{
+    transform:translate(var(--tx),var(--ty))
+      rotate(calc(var(--rot) + 88deg))
+      scale(calc(var(--sx)*.42),calc(var(--sy)*.62))
+      skewX(18deg);
+    opacity:0;
+  }
+}
+.microdrop{
+  --tx:0px; --ty:0px; --d:2px;
+  position:absolute;
+  left:var(--px); top:var(--py);
+  width:var(--d); height:var(--d);
+  margin:calc(var(--d)*-.5) 0 0 calc(var(--d)*-.5);
+  z-index:11;
+  border-radius:50%;
+  background:rgba(255,255,255,.72);
+  box-shadow:0 0 1px rgba(105,205,255,.42);
+  opacity:.88;
+  animation:microFly 240ms ease-out forwards;
+}
+@keyframes microFly{
+  0%{transform:translate(0,0) scale(1);opacity:.9}
+  100%{transform:translate(var(--tx),var(--ty)) scale(.35);opacity:0}
+}
+@keyframes membraneCollapse{
+  0%{
+    -webkit-mask:radial-gradient(circle at var(--px) var(--py),transparent 0 1%,#000 1.5% 100%);
+    mask:radial-gradient(circle at var(--px) var(--py),transparent 0 1%,#000 1.5% 100%);
+    opacity:.95;
+  }
+  22%{
+    -webkit-mask:radial-gradient(circle at var(--px) var(--py),transparent 0 8%,#000 10% 100%);
+    mask:radial-gradient(circle at var(--px) var(--py),transparent 0 8%,#000 10% 100%);
+    opacity:.92;
+  }
+  52%{
+    -webkit-mask:radial-gradient(circle at var(--px) var(--py),transparent 0 35%,#000 38% 100%);
+    mask:radial-gradient(circle at var(--px) var(--py),transparent 0 35%,#000 38% 100%);
+    opacity:.82;
+  }
+  78%{
+    -webkit-mask:radial-gradient(circle at var(--px) var(--py),transparent 0 67%,#000 71% 100%);
+    mask:radial-gradient(circle at var(--px) var(--py),transparent 0 67%,#000 71% 100%);
+    opacity:.58;
+  }
+  100%{
+    -webkit-mask:radial-gradient(circle at var(--px) var(--py),transparent 0 103%,#000 104% 100%);
+    mask:radial-gradient(circle at var(--px) var(--py),transparent 0 103%,#000 104% 100%);
+    opacity:0;
+  }
+}
+
 .cell:focus-visible{outline:4px solid #111;outline-offset:2px}
-.note{text-align:center;color:var(--muted);font-size:14px;margin-top:16px}
+.controls{margin-top:18px}
+#newCard{
+  border:0;
+  border-radius:14px;
+  padding:12px 22px;
+  min-height:48px;
+  background:#087ee7;
+  color:#fff;
+  font-size:18px;
+  font-weight:900;
+  box-shadow:0 4px 0 #075da9;
+  cursor:pointer;
+}
+#newCard:active{transform:translateY(2px);box-shadow:0 2px 0 #075da9}
+.note{text-align:center;color:var(--muted);font-size:14px;margin-top:12px}
+
 @media(max-width:560px){
- main{padding:12px} .headers,.board{gap:6px} .h{font-size:11px;padding:7px 2px;border-width:2px}
- .cell{min-height:105px;border-width:2px;border-radius:12px;padding:6px}
- .letter{font-size:48px} .name{font-size:15px;margin-top:6px} .chip{border-width:4px}
+  main{padding:12px}
+  .headers,.board{gap:6px}
+  .h{font-size:11px;padding:7px 2px;border-width:2px}
+  .cell{min-height:105px;border-width:2px;border-radius:12px;padding:6px}
+  .letter{font-size:48px}
+  .name{font-size:15px;margin-top:6px}
+  .bubble{width:min(84px,76%)}
+}
+@media(prefers-reduced-motion:reduce){
+  .bubble{animation:none}
 }
 </style>
 </head>
 <body>
 <main>
   <h1>BINGO · EL ALFABETO</h1>
-  <p class="sub">Click a square to place a marker. Click it again to remove the marker.</p>
+  <p class="sub">Click a square to mark it. Click it again to pop the bubble!</p>
 
   <div class="headers">
     <div class="h h0">AMARILLO</div>
@@ -51,34 +284,126 @@ h1{margin:0;font-size:clamp(34px,6vw,62px);text-align:center}
   </div>
 
   <div class="board" id="board" aria-label="Spanish alphabet Bingo card"></div>
+
+  <div class="controls">
+    <button id="newCard" type="button">Generate a new card</button>
+  </div>
   <div class="note">A different Bingo card is generated each time this page is opened.</div>
 </main>
 
 <script>
 (() => {
-  const groups = [[["A", "a"], ["B", "be"], ["C", "ce"], ["D", "de"], ["E", "e"], ["F", "efe"], ["G", "ge"], ["H", "hache"], ["I", "i"]], [["J", "jota"], ["K", "ka"], ["L", "ele"], ["M", "eme"], ["N", "ene"], ["Ñ", "eñe"], ["O", "o"], ["P", "pe"], ["Q", "cu"]], [["R", "erre"], ["S", "ese"], ["T", "te"], ["U", "u"], ["V", "uve"], ["W", "uve doble"], ["X", "equis"], ["Y", "ye"], ["Z", "zeta"]]];
-  const board = document.getElementById('board');
+  const groups = [
+    [["A","a"],["B","be"],["C","ce"],["D","de"],["E","e"],["F","efe"],["G","ge"],["H","hache"],["I","i"]],
+    [["J","jota"],["K","ka"],["L","ele"],["M","eme"],["N","ene"],["Ñ","eñe"],["O","o"],["P","pe"],["Q","cu"]],
+    [["R","erre"],["S","ese"],["T","te"],["U","u"],["V","uve"],["W","uve doble"],["X","equis"],["Y","ye"],["Z","zeta"]]
+  ];
 
-  function shuffle(a) {
+  const board = document.getElementById('board');
+  const newCard = document.getElementById('newCard');
+
+  function shuffle(a){
     a=a.slice();
-    for(let i=a.length-1;i>0;i--) {
+    for(let i=a.length-1;i>0;i--){
       const j=Math.floor(Math.random()*(i+1));
       [a[i],a[j]]=[a[j],a[i]];
     }
     return a;
   }
 
-  function makeCard() {
-    board.innerHTML='';
-    const selected = groups.map(g => shuffle(g).slice(0,3));
+  function popBubble(existing,event,cell){
+    if(existing.classList.contains('popping')) return;
 
-    // Rows are horizontal; each column keeps its fixed color/group.
-    for(let row=0; row<3; row++) {
-      for(let col=0; col<3; col++) {
-        const [letter,name] = selected[col][row];
+    const rect=existing.getBoundingClientRect();
+    const clickX=event ? Math.max(0,Math.min(rect.width,event.clientX-rect.left)) : rect.width/2;
+    const clickY=event ? Math.max(0,Math.min(rect.height,event.clientY-rect.top)) : rect.height/2;
+    const px=(clickX/rect.width)*100;
+    const py=(clickY/rect.height)*100;
+
+    existing.style.setProperty('--px',px+'%');
+    existing.style.setProperty('--py',py+'%');
+    existing.classList.add('popping');
+    cell.setAttribute('aria-pressed','false');
+
+    const tear=document.createElement('span');
+    tear.className='membrane-tear';
+    tear.style.setProperty('--px',px+'%');
+    tear.style.setProperty('--py',py+'%');
+
+    const wave=document.createElement('span');
+    wave.className='tension-wave';
+    wave.style.setProperty('--px',px+'%');
+    wave.style.setProperty('--py',py+'%');
+
+    existing.append(tear,wave);
+
+    const fragments=[
+      [-28,-12,-28,1.0,.72],[-18,-30,12,.82,.58],[4,-36,58,.72,.52],
+      [24,-27,104,.9,.62],[34,-8,148,.78,.56],[31,17,186,.88,.66],
+      [15,30,232,.72,.54],[-8,33,274,.82,.61],[-27,23,316,.9,.63],
+      [-34,4,352,.68,.48]
+    ];
+
+    fragments.forEach(([tx,ty,rot,sx,sy])=>{
+      const f=document.createElement('span');
+      f.className='film-fragment';
+      f.style.setProperty('--px',px+'%');
+      f.style.setProperty('--py',py+'%');
+      f.style.setProperty('--tx',tx+'px');
+      f.style.setProperty('--ty',ty+'px');
+      f.style.setProperty('--rot',rot+'deg');
+      f.style.setProperty('--sx',sx);
+      f.style.setProperty('--sy',sy);
+      existing.appendChild(f);
+    });
+
+    const drops=[
+      [-20,-8,1.5],[-13,-20,2],[-2,-25,1.2],[10,-21,1.6],[21,-11,1.4],
+      [25,1,1.8],[18,14,1.3],[8,21,1.7],[-6,23,1.2],[-18,15,1.6],
+      [-24,4,1.3],[5,-12,1.1],[-9,8,1.1],[13,7,1.2]
+    ];
+
+    drops.forEach(([tx,ty,d])=>{
+      const m=document.createElement('span');
+      m.className='microdrop';
+      m.style.setProperty('--px',px+'%');
+      m.style.setProperty('--py',py+'%');
+      m.style.setProperty('--tx',tx+'px');
+      m.style.setProperty('--ty',ty+'px');
+      m.style.setProperty('--d',d+'px');
+      existing.appendChild(m);
+    });
+
+    setTimeout(()=>existing.remove(),320);
+  }
+
+  function markCell(cell,event){
+    const existing=cell.querySelector('.bubble');
+
+    if(!existing){
+      const b=document.createElement('span');
+      b.className='bubble';
+      b.setAttribute('aria-hidden','true');
+      cell.appendChild(b);
+      cell.setAttribute('aria-pressed','true');
+      return;
+    }
+
+    popBubble(existing,event,cell);
+  }
+
+  function makeCard(){
+    board.innerHTML='';
+    const selected=groups.map(g=>shuffle(g).slice(0,3));
+
+    for(let row=0;row<3;row++){
+      for(let col=0;col<3;col++){
+        const [letter,name]=selected[col][row];
+
         const cell=document.createElement('button');
         cell.type='button';
         cell.className='cell c'+col;
+        cell.setAttribute('aria-label',letter+' '+name);
         cell.setAttribute('aria-pressed','false');
 
         const l=document.createElement('div');
@@ -89,19 +414,14 @@ h1{margin:0;font-size:clamp(34px,6vw,62px);text-align:center}
         n.className='name';
         n.textContent=name;
 
-        const chip=document.createElement('div');
-        chip.className='chip';
-
-        cell.append(l,n,chip);
-        cell.addEventListener('click',()=>{
-          cell.classList.toggle('marked');
-          cell.setAttribute('aria-pressed',cell.classList.contains('marked')?'true':'false');
-        });
+        cell.append(l,n);
+        cell.addEventListener('click',(event)=>markCell(cell,event));
         board.appendChild(cell);
       }
     }
   }
 
+  newCard.addEventListener('click',makeCard);
   makeCard();
 })();
 </script>
