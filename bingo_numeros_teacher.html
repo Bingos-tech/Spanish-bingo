@@ -1,40 +1,28 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Numbers Bingo 0–100 — Teacher</title>
-<style>
-:root{--yellow:#fff36a;--yellow-b:#d9c900;--blue:#8fd3ff;--blue-b:#318dc7;--red:#ff987f;--red-b:#cf5c45;--green:#8ddd72;--green-b:#45a13f;--purple:#c9b5f7;--purple-b:#846cc3;--ink:#18243a;--muted:#667085}
-*{box-sizing:border-box}body{margin:0;background:#f7f8fb;color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
-main{max-width:1100px;margin:auto;padding:24px}h1{margin:0;text-align:center;font-size:clamp(38px,6vw,68px);font-weight:1000}
-.sub{text-align:center;color:var(--muted);font-size:18px;margin:5px 0 18px}
-.wrap{display:flex;justify-content:center}
-.card{width:min(500px,92vw);min-height:315px;border:7px solid;border-radius:28px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px;color:#000}
-.big{font-size:clamp(125px,20vw,220px);font-weight:1000;line-height:.78}
-.word{font-size:clamp(38px,6vw,72px);font-weight:950;line-height:1.02;margin-top:28px;text-align:center;max-width:100%;overflow-wrap:anywhere}
-.y{background:var(--yellow);border-color:var(--yellow-b)}.b{background:var(--blue);border-color:var(--blue-b)}.r{background:var(--red);border-color:var(--red-b)}.g{background:var(--green);border-color:var(--green-b)}.p{background:var(--purple);border-color:var(--purple-b)}
-.controls{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:18px 0 24px}
-button{min-height:52px;padding:11px 22px;border:0;border-radius:14px;font-size:18px;font-weight:900;color:#fff;background:#087ee7;cursor:pointer;box-shadow:0 4px 0 #075da9}
-button.secondary{background:#596579;box-shadow:0 4px 0 #3e4756}button.reset{background:#b42318;box-shadow:0 4px 0 #7f1d14}button:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
-h2{font-size:24px;margin:0 0 10px}.history{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
-.tile{height:92px;border:3px solid;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#000;padding:5px}
-.tn{font-size:35px;font-weight:1000;line-height:.9}.tw{font-size:12px;font-weight:850;margin-top:7px;text-align:center;line-height:1.05}
-.empty,.status{color:var(--muted)}.status{text-align:center;font-weight:750;margin-top:12px}
-@media(max-width:600px){main{padding:14px}.card{min-height:260px}.history{grid-template-columns:repeat(4,1fr)}.tile{height:84px}.tn{font-size:31px}.tw{font-size:11px}}
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BINGO • LOS NÚMEROS</title>
+<style>*{box-sizing:border-box}body{margin:0;background:#f7f8fc;color:#17233a;font-family:Arial,sans-serif}.w{max-width:1180px;margin:auto;padding:12px 30px 16px}h1{text-align:center;margin:0;font-size:clamp(42px,5.4vw,68px);font-weight:900;line-height:1}.sub{text-align:center;color:#707a90;font-size:19px;margin:6px 0 10px}.card{width:520px;height:300px;max-width:82vw;margin:auto;border:8px solid;border-radius:30px;display:flex;flex-direction:column;justify-content:center;align-items:center;color:#000}.num{font-size:155px;line-height:.82;font-weight:1000}.word{font-size:50px;font-weight:1000;text-align:center;margin-top:20px}.buttons{display:flex;justify-content:center;gap:14px;margin:12px 0 14px}button{border:0;border-radius:16px;padding:13px 27px;color:white;font-size:20px;font-weight:800;cursor:pointer;box-shadow:0 6px #3335}#prev{background:#69758c}#next{background:#1285e6}#reset{background:#c8271c}button:disabled{opacity:.45}h2{font-size:25px;margin:4px 0 8px}.history{display:flex;gap:12px;flex-wrap:wrap}.tile{width:108px;height:92px;border:4px solid #111;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#000;text-align:center;padding:5px}.tile .tn{font-size:40px;font-weight:1000;line-height:.9}.tile .tw{font-size:14px;font-weight:900;line-height:1.05;margin-top:9px}.count{text-align:center;color:#707a90;font-size:17px;font-weight:bold;margin-top:7px}.yellow{background:#fff36a;border-color:#d9c900}.blue{background:#8fd3ff;border-color:#318dc7}.red{background:#ff987f;border-color:#cf5c45}.green{background:#8ddd72;border-color:#45a13f}.purple{background:#c9b5f7;border-color:#846cc3}
+@media (max-height:800px){
+ .w{padding-top:8px}
+ h1{font-size:52px}
+ .sub{font-size:17px;margin:4px 0 7px}
+ .card{width:460px;height:245px}
+ .num{font-size:128px}
+ .word{font-size:42px;margin-top:14px}
+ .buttons{margin:9px 0 10px}
+ button{padding:10px 24px;font-size:18px}
+ h2{font-size:22px;margin:2px 0 6px}
+ .tile{width:98px;height:80px}
+ .tile .tn{font-size:34px}
+ .tile .tw{font-size:12px;margin-top:5px}
+ .count{font-size:15px;margin-top:5px}
+}
 </style></head>
-<body><main>
-<h1>BINGO · LOS NÚMEROS</h1><div class="sub">Teacher caller · 0–100</div>
-<div class="wrap"><section id="card" class="card y" aria-live="polite"><div id="number" class="big">—</div><div id="word" class="word">Ready</div></section></div>
-<div class="controls"><button id="prev" class="secondary" type="button">Previous</button><button id="next" type="button">Next call</button><button id="resetBtn" class="reset" type="button">Reset</button></div>
-<h2>Calls already made</h2><div id="history" class="history"></div><div id="status" class="status"></div>
-</main>
+<body><div class="w"><h1>BINGO • LOS NÚMEROS</h1><div class="sub">Teacher caller · 0–100</div><div id="card" class="card blue"><div class="num">—</div><div class="word">Ready?</div></div><div class="buttons"><button id="prev">Previous</button><button id="next">Next call</button><button id="reset">Reset</button></div><h2>Calls already made</h2><div id="history" class="history"></div><div id="count" class="count">0 of 101 numbers called</div></div>
 <script>
-(()=>{const items=[[0, "cero"], [1, "uno"], [2, "dos"], [3, "tres"], [4, "cuatro"], [5, "cinco"], [6, "seis"], [7, "siete"], [8, "ocho"], [9, "nueve"], [10, "diez"], [11, "once"], [12, "doce"], [13, "trece"], [14, "catorce"], [15, "quince"], [16, "dieciséis"], [17, "diecisiete"], [18, "dieciocho"], [19, "diecinueve"], [20, "veinte"], [21, "veintiuno"], [22, "veintidós"], [23, "veintitrés"], [24, "veinticuatro"], [25, "veinticinco"], [26, "veintiséis"], [27, "veintisiete"], [28, "veintiocho"], [29, "veintinueve"], [30, "treinta"], [31, "treinta y uno"], [32, "treinta y dos"], [33, "treinta y tres"], [34, "treinta y cuatro"], [35, "treinta y cinco"], [36, "treinta y seis"], [37, "treinta y siete"], [38, "treinta y ocho"], [39, "treinta y nueve"], [40, "cuarenta"], [41, "cuarenta y uno"], [42, "cuarenta y dos"], [43, "cuarenta y tres"], [44, "cuarenta y cuatro"], [45, "cuarenta y cinco"], [46, "cuarenta y seis"], [47, "cuarenta y siete"], [48, "cuarenta y ocho"], [49, "cuarenta y nueve"], [50, "cincuenta"], [51, "cincuenta y uno"], [52, "cincuenta y dos"], [53, "cincuenta y tres"], [54, "cincuenta y cuatro"], [55, "cincuenta y cinco"], [56, "cincuenta y seis"], [57, "cincuenta y siete"], [58, "cincuenta y ocho"], [59, "cincuenta y nueve"], [60, "sesenta"], [61, "sesenta y uno"], [62, "sesenta y dos"], [63, "sesenta y tres"], [64, "sesenta y cuatro"], [65, "sesenta y cinco"], [66, "sesenta y seis"], [67, "sesenta y siete"], [68, "sesenta y ocho"], [69, "sesenta y nueve"], [70, "setenta"], [71, "setenta y uno"], [72, "setenta y dos"], [73, "setenta y tres"], [74, "setenta y cuatro"], [75, "setenta y cinco"], [76, "setenta y seis"], [77, "setenta y siete"], [78, "setenta y ocho"], [79, "setenta y nueve"], [80, "ochenta"], [81, "ochenta y uno"], [82, "ochenta y dos"], [83, "ochenta y tres"], [84, "ochenta y cuatro"], [85, "ochenta y cinco"], [86, "ochenta y seis"], [87, "ochenta y siete"], [88, "ochenta y ocho"], [89, "ochenta y nueve"], [90, "noventa"], [91, "noventa y uno"], [92, "noventa y dos"], [93, "noventa y tres"], [94, "noventa y cuatro"], [95, "noventa y cinco"], [96, "noventa y seis"], [97, "noventa y siete"], [98, "noventa y ocho"], [99, "noventa y nueve"], [100, "cien"]],card=document.getElementById('card'),num=document.getElementById('number'),word=document.getElementById('word'),hist=document.getElementById('history'),status=document.getElementById('status'),prev=document.getElementById('prev'),next=document.getElementById('next'),resetBtn=document.getElementById('resetBtn');let deck=[],i=-1;
-function cls(n){return n<=20?'y':n<=40?'b':n<=60?'r':n<=80?'g':'p'}
-function shuffle(a){a=a.slice();for(let x=a.length-1;x>0;x--){let j=Math.floor(Math.random()*(x+1));[a[x],a[j]]=[a[j],a[x]]}return a}
-function fitWord(){word.style.fontSize='';let size=parseFloat(getComputedStyle(word).fontSize);while((word.scrollWidth>card.clientWidth-40||word.scrollHeight>100)&&size>27){size-=1;word.style.fontSize=size+'px'}}
-function render(){if(i<0){card.className='card y';num.textContent='—';word.textContent='Ready';hist.innerHTML='<div class="empty">No calls yet.</div>';prev.disabled=true;next.disabled=false;status.textContent='0 of '+deck.length+' numbers called';return}
-let [n,w]=deck[i];card.className='card '+cls(n);num.textContent=n;word.textContent=w;requestAnimationFrame(fitWord);hist.innerHTML='';deck.slice(0,i+1).forEach(([a,b])=>{let t=document.createElement('div');t.className='tile '+cls(a);let x=document.createElement('div');x.className='tn';x.textContent=a;let y=document.createElement('div');y.className='tw';y.textContent=b;t.append(x,y);hist.append(t)});prev.disabled=i<=0;next.disabled=i>=deck.length-1;status.textContent=(i+1)+' of '+deck.length+' numbers called'+(i===deck.length-1?' · All numbers have been called.':'')}
-function resetGame(){deck=shuffle(items);i=-1;render()}next.addEventListener('click',()=>{if(i<deck.length-1){i++;render()}});prev.addEventListener('click',()=>{if(i>0){i--;render()}});resetBtn.addEventListener('click',resetGame);resetGame()})();
+const o=["cero","uno","dos","tres","cuatro","cinco","seis","siete","ocho","nueve"],sp={10:"diez",11:"once",12:"doce",13:"trece",14:"catorce",15:"quince",16:"dieciséis",17:"diecisiete",18:"dieciocho",19:"diecinueve",20:"veinte",21:"veintiuno",22:"veintidós",23:"veintitrés",24:"veinticuatro",25:"veinticinco",26:"veintiséis",27:"veintisiete",28:"veintiocho",29:"veintinueve",100:"cien"},ts={30:"treinta",40:"cuarenta",50:"cincuenta",60:"sesenta",70:"setenta",80:"ochenta",90:"noventa"};
+function wd(n){if(n<10)return o[n];if(sp[n])return sp[n];let t=Math.floor(n/10)*10,u=n%10;return u?ts[t]+" y "+o[u]:ts[t]}function cl(n){return n<=20?"yellow":n<=40?"blue":n<=60?"red":n<=80?"green":"purple"}function sh(a){for(let i=a.length-1;i;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+let deck=[],called=[];const card=document.querySelector("#card"),history=document.querySelector("#history"),count=document.querySelector("#count"),prev=document.querySelector("#prev"),next=document.querySelector("#next");
+function show(n){card.className="card "+cl(n);card.innerHTML='<div class="num">'+n+'</div><div class="word">'+wd(n)+'</div>'}
+function render(){history.innerHTML="";called.slice().reverse().forEach(n=>{let d=document.createElement("div");d.className="tile "+cl(n);d.innerHTML='<div class="tn">'+n+'</div><div class="tw">'+wd(n)+'</div>';history.appendChild(d)});count.textContent=called.length+" of 101 numbers called";prev.disabled=called.length<2;next.disabled=called.length>=101}
+function reset(){deck=sh([...Array(101).keys()]);called=[];card.className="card blue";card.innerHTML='<div class="num">—</div><div class="word">Ready?</div>';render()}
+next.onclick=()=>{if(called.length<101){let n=deck[called.length];called.push(n);show(n);render()}};prev.onclick=()=>{if(called.length>1){called.pop();show(called[called.length-1]);render()}};document.querySelector("#reset").onclick=reset;reset();
 </script></body></html>
