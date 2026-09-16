@@ -1,0 +1,343 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>¿Quién participa? — Clase Verde</title>
+<style>
+*{box-sizing:border-box}
+:root{
+  --navy:#102b4e;
+  --red:#24a65a;
+  --red-dark:#197a42;
+  --yellow:#ffd84d;
+  --yellow-dark:#c8a51d;
+  --gray:#8b94a1;
+  --light:#f4f7fb;
+}
+body{
+  margin:0;
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  background:#edf1f6;
+  font-family:Arial,Helvetica,sans-serif;
+  color:var(--navy);
+}
+.app{
+  width:min(1100px,96vw);
+  aspect-ratio:4/3;
+  background:#fff;
+  border:7px solid var(--navy);
+  border-radius:28px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 15px 40px #0002;
+  display:grid;
+  grid-template-rows:22% 1fr 16%;
+}
+header{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:18px 120px 6px;
+}
+h1{
+  margin:0;
+  font-size:clamp(44px,5vw,66px);
+  line-height:.95;
+  font-weight:900;
+  letter-spacing:.5px;
+}
+.sub{
+  margin-top:7px;
+  color:var(--gray);
+  font-size:clamp(16px,1.8vw,22px);
+  font-weight:800;
+  letter-spacing:.8px;
+}
+.badge{
+  position:absolute;
+  top:20px;
+  right:24px;
+  width:86px;
+  height:86px;
+  border-radius:50%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  background:var(--red);
+  color:#fff;
+  font-size:33px;
+  font-weight:900;
+  line-height:.9;
+  box-shadow:0 6px 0 var(--red-dark);
+}
+.badge small{
+  margin-top:5px;
+  font-size:10px;
+  font-weight:800;
+}
+main{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:0 40px;
+}
+.history{
+  position:absolute;
+  left:28px;
+  top:50%;
+  transform:translateY(-50%);
+  width:190px;
+  max-height:390px;
+  background:#f7f8fb;
+  border:2px solid #e2e7ee;
+  border-radius:20px;
+  padding:14px;
+  z-index:2;
+}
+.history h2{
+  margin:0 0 10px;
+  color:var(--navy);
+  font-size:15px;
+  line-height:1.15;
+  text-align:center;
+}
+.history h2 small{
+  display:block;
+  margin-top:3px;
+  color:var(--gray);
+  font-size:10px;
+}
+.history-list{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  max-height:320px;
+  overflow:auto;
+}
+.history-item{
+  display:grid;
+  grid-template-columns:34px 1fr;
+  align-items:center;
+  gap:8px;
+  background:#fff;
+  border-radius:11px;
+  padding:6px 8px;
+  font-size:12px;
+  font-weight:800;
+  color:var(--navy);
+}
+.history-num{
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:var(--red);
+  color:#fff;
+  font-size:14px;
+  font-weight:900;
+}
+.history-empty{
+  text-align:center;
+  color:#9aa2ad;
+  font-size:12px;
+  padding:10px 2px;
+}
+.center{
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+.pick{
+  border:0;
+  border-radius:22px;
+  padding:18px 34px;
+  background:var(--yellow);
+  color:var(--navy);
+  font-size:clamp(21px,2.2vw,29px);
+  font-weight:900;
+  box-shadow:0 7px 0 var(--yellow-dark);
+  cursor:pointer;
+  transition:.12s;
+  min-width:330px;
+}
+.pick:active{
+  transform:translateY(5px);
+  box-shadow:0 2px 0 var(--yellow-dark);
+}
+.pick:disabled{opacity:.55}
+.result{
+  min-height:330px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  margin-top:8px;
+}
+.num{
+  width:150px;
+  height:150px;
+  border-radius:50%;
+  background:var(--red);
+  color:#fff;
+  border:9px solid var(--yellow);
+  display:grid;
+  place-items:center;
+  font-size:86px;
+  line-height:1;
+  font-weight:900;
+  box-shadow:0 8px 0 var(--red-dark);
+}
+.name{
+  margin-top:20px;
+  color:var(--red);
+  font-size:clamp(42px,4.8vw,62px);
+  line-height:1;
+  font-weight:900;
+  text-align:center;
+}
+.turn{
+  margin-top:10px;
+  color:var(--navy);
+  font-size:24px;
+  font-weight:900;
+}
+.turn small{
+  color:var(--gray);
+  font-size:15px;
+}
+.done{
+  display:none;
+  margin-top:14px;
+  text-align:center;
+  color:var(--navy);
+  font-size:30px;
+  font-weight:900;
+}
+.done small{
+  color:var(--gray);
+  font-size:16px;
+}
+footer{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+}
+.controls{
+  display:flex;
+  gap:14px;
+  align-items:center;
+  justify-content:center;
+}
+.btn{
+  border:0;
+  border-radius:15px;
+  padding:13px 22px;
+  font-size:15px;
+  font-weight:900;
+  cursor:pointer;
+}
+.new{
+  display:none;
+  background:var(--navy);
+  color:#fff;
+}
+.reset{
+  background:#e7ebf1;
+  color:var(--navy);
+}
+.doodle{
+  position:absolute;
+  font-size:31px;
+}
+.a{left:34px;bottom:24px}
+.b{right:34px;bottom:24px}
+.c{left:18%;bottom:20px}
+.d{right:18%;bottom:18px}
+.conf{
+  position:absolute;
+  width:9px;
+  height:15px;
+  border-radius:2px;
+  animation:fly 1.4s ease-out forwards;
+  pointer-events:none;
+}
+@keyframes fly{
+  to{
+    transform:translate(var(--x),var(--y)) rotate(600deg);
+    opacity:0;
+  }
+}
+@media(max-width:760px){
+  .app{width:98vw}
+  header{padding-left:90px;padding-right:90px}
+  .badge{width:70px;height:70px;font-size:27px}
+  .pick{min-width:0}
+  .num{width:125px;height:125px;font-size:72px}
+}
+</style>
+</head><body>
+<div class="app" id="app">
+  <header>
+    <div>
+      <h1>¿QUIÉN PARTICIPA?</h1>
+      <div class="sub">WHO'S NEXT?</div>
+    </div>
+    <div class="badge">14<small>estudiantes</small></div>
+  </header>
+
+  <main>
+    <aside class="history">
+      <h2>YA PARTICIPARON<small>Already participated</small></h2>
+      <div class="history-list" id="historyList">
+        <div class="history-empty">Todavía ninguno</div>
+      </div>
+    </aside>
+    <section class="center">
+      <button class="pick" id="pick">🎲 ¡ELIGE UN ESTUDIANTE!</button>
+
+      <div class="result">
+        <div class="num" id="num">?</div>
+        <div class="name" id="name">—</div>
+        <div class="turn" id="turn" style="visibility:hidden">
+          ¡Te toca! <small>/ Your turn!</small>
+        </div>
+        <div class="done" id="done">
+          🎉 ¡Todos participaron!<br>
+          <small>Everyone participated!</small>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="controls">
+      <button class="btn new" id="new">🔄 NUEVA RONDA</button>
+      <button class="btn reset" id="reset">↺ Reiniciar</button>
+    </div>
+    <span class="doodle a">⚡</span>
+    <span class="doodle b">⭐</span>
+    <span class="doodle c">🎯</span>
+    <span class="doodle d">❓</span>
+  </footer>
+</div>
+
+<script>
+const students=[{n:1,name:'Thea'},{n:2,name:'Tyler'},{n:3,name:'Maddie'},{n:4,name:'Annabelle'},{n:5,name:'Ryan'},{n:6,name:'Hilton'},{n:7,name:'Heidi'},{n:8,name:'Yug'},{n:9,name:'Neko'},{n:10,name:'Knox'},{n:11,name:'Leo'},{n:12,name:'Aanya'},{n:13,name:'Ari'},{n:14,name:'Macair'}];let left=[],used=[],busy=false;const $=x=>document.getElementById(x);
+function shuffle(a){a=[...a];for(let i=a.length-1;i;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function start(){left=shuffle(students);used=[];$('historyList').innerHTML='<div class="history-empty">Todavía ninguno</div>';$('num').textContent='?';$('name').textContent='—';$('turn').style.visibility='hidden';$('done').style.display='none';$('new').style.display='none';$('pick').disabled=false}
+function render(){
+  $('historyList').innerHTML=used.map(s=>`<div class="history-item"><span class="history-num">${s.n}</span><span>${s.name}</span></div>`).join('');
+}
+function confetti(){let colors=['#24a65a','#ffd84d','#2f80ed','#22a663','#8b5cf6'];for(let i=0;i<55;i++){let c=document.createElement('i');c.className='conf';c.style.background=colors[Math.floor(Math.random()*colors.length)];c.style.left='50%';c.style.top='48%';c.style.setProperty('--x',(Math.random()*650-325)+'px');c.style.setProperty('--y',(Math.random()*400-80)+'px');$('app').appendChild(c);setTimeout(()=>c.remove(),1450)}}
+$('pick').onclick=()=>{if(busy||!left.length)return;busy=true;$('pick').disabled=true;$('turn').style.visibility='hidden';let st=performance.now(),t=setInterval(()=>{let s=left[Math.floor(Math.random()*left.length)];$('num').textContent=s.n;$('name').textContent=s.name;if(performance.now()-st>2200){clearInterval(t);let chosen=left.pop();$('num').textContent=chosen.n;$('name').textContent=chosen.name;$('turn').style.visibility='visible';used.push(chosen);render();confetti();busy=false;if(left.length)$('pick').disabled=false;else{$('done').style.display='block';$('new').style.display='inline-block'}}},70)}
+$('new').onclick=start;$('reset').onclick=start;start();
+</script>
+</body></html>
