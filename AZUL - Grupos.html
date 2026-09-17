@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clase Azul — Generador de Grupos</title>
+<style>
+:root{--navy:#17324d;--blue:#2f80ed;--red:#4caf50;--orange:#ff9f43;--green:#4caf50;--purple:#8e6cef;--bg:#f7fbff;--card:#fff;--muted:#6b7280;--border:#d9e3ec}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--navy);display:flex;justify-content:center;padding:22px}
+.app{width:min(980px,100%);background:var(--card);border:4px solid var(--navy);border-radius:28px;padding:28px;text-align:center;position:relative}
+.class-badge{
+  position:absolute;top:18px;right:22px;width:62px;height:62px;border-radius:50%;
+  background:var(--blue);border:4px solid #fff;box-shadow:0 0 0 2px var(--blue);
+  display:flex;align-items:center;justify-content:center;font-size:25px;font-weight:900;color:#fff
+}
+.eyebrow{font-weight:800;letter-spacing:.12em;text-transform:uppercase;font-size:14px;color:var(--muted)}
+h1{margin:10px 0 0;font-size:clamp(34px,5vw,58px);line-height:1}
+.subtitle{font-size:clamp(20px,2.6vw,28px);font-weight:800;margin-top:10px;color:var(--blue)}
+.doodles{font-size:26px;margin:14px 0}
+.mode-label{margin-top:10px;font-weight:900;font-size:18px}
+.mode-sub{font-size:14px;color:var(--muted);margin-top:3px}
+.mode-buttons,.controls{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:16px 0}
+.mode-btn,.secondary{border:2px solid var(--border);background:#eef4f9;color:var(--navy);border-radius:16px;padding:13px 16px;font-size:16px;font-weight:900;cursor:pointer}
+.mode-btn{min-width:135px}.mode-btn.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.primary{border:none;background:var(--blue);color:#fff;border-radius:18px;padding:16px 24px;min-width:280px;font-size:18px;font-weight:900;cursor:pointer}
+button:disabled{opacity:.55;cursor:not-allowed}
+.mixing{min-height:44px;margin-top:16px;font-weight:900;font-size:22px}
+.groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:22px}
+.group-card{border:3px solid var(--border);border-radius:22px;padding:16px;background:#fff;animation:pop .35s ease-out}
+.group-title{font-weight:900;font-size:18px;margin-bottom:10px}
+.members{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.student{display:flex;flex-direction:column;align-items:center;min-width:88px}
+.member{width:58px;height:58px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:24px;background:#f4f7fb;border:2px solid var(--border)}
+.student-name{margin-top:6px;font-size:15px;font-weight:800;color:var(--navy);white-space:nowrap}
+.group-card:nth-child(5n+1){border-color:var(--red)}.group-card:nth-child(5n+2){border-color:var(--orange)}.group-card:nth-child(5n+3){border-color:var(--green)}.group-card:nth-child(5n+4){border-color:var(--blue)}.group-card:nth-child(5n+5){border-color:var(--purple)}
+@keyframes pop{0%{transform:scale(.92);opacity:.2}100%{transform:scale(1);opacity:1}}
+.note{margin-top:18px;font-size:13px;color:var(--muted)}.hidden{display:none}
+@media(max-width:700px){body{padding:10px}.app{padding:20px}.class-badge{position:static;display:inline-block;margin-bottom:10px}.groups{grid-template-columns:1fr}.primary,.secondary,.mode-btn{width:100%}}
+</style>
+</head>
+<body>
+<main class="app">
+<div class="class-badge" aria-label="16 estudiantes">16</div>
+<div class="eyebrow">Spanish Class • 6th Grade</div>
+<h1>¡FORMAMOS GRUPOS!</h1>
+<div class="subtitle">LET'S MAKE GROUPS!</div>
+<div class="doodles">👥 🎲 🔀 ⭐ 💬</div>
+
+<div class="mode-buttons">
+<button class="mode-btn active" data-size="2" type="button">👥 PAREJAS</button>
+<button class="mode-btn" data-size="3" type="button">GRUPOS DE 3</button>
+<button class="mode-btn" data-size="4" type="button">GRUPOS DE 4</button>
+<button class="mode-btn" data-size="5" type="button">GRUPOS DE 5</button>
+</div>
+
+<div class="controls">
+<button id="makeBtn" class="primary" type="button">🎲 ¡FORMAR GRUPOS!</button>
+<button id="shuffleBtn" class="secondary hidden" type="button">🔀 ¡NUEVOS GRUPOS!</button>
+<button id="resetBtn" class="secondary" type="button">↺ Reiniciar</button>
+</div>
+
+<div id="mixing" class="mixing"></div>
+<section id="groups" class="groups"></section>
+<div class="note">El sistema intenta evitar repetir exactamente las mismas parejas o grupos de la ronda anterior.</div>
+</main>
+
+<script>
+(() => {
+const students=Array.from({length:16},(_,i)=>i+1);
+const names={1:'Mason',2:'Gabby',3:'Audrey',4:'Mila',5:'Anthony',6:'Sistine',7:'Maximus',8:'Victoria L.',9:'Rose',10:'Emmett',11:'Victoria P.',12:'Tyler',13:'Nyle',14:'Matthew',15:'Graydon',16:'Jasper'};
+let groupSize=2, previousSignature="", previousPairs=new Set(), isMixing=false;
+const modeButtons=[...document.querySelectorAll('.mode-btn')];
+const makeBtn=document.getElementById('makeBtn'), shuffleBtn=document.getElementById('shuffleBtn'), resetBtn=document.getElementById('resetBtn'), groupsEl=document.getElementById('groups'), mixingEl=document.getElementById('mixing');
+
+modeButtons.forEach(btn=>btn.addEventListener('click',()=>{
+groupSize=Number(btn.dataset.size);
+modeButtons.forEach(b=>b.classList.remove('active'));
+btn.classList.add('active');
+groupsEl.innerHTML=''; shuffleBtn.classList.add('hidden');
+previousSignature=''; previousPairs.clear();
+}));
+
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function buildGroups(order,size){
+const n=order.length, groups=[];
+if(size===2 && n%2===1){
+const pairCount=(n-3)/2;let idx=0;
+for(let i=0;i<pairCount;i++){groups.push(order.slice(idx,idx+2));idx+=2;}
+groups.push(order.slice(idx,idx+3));return groups;
+}
+if(n%size===0){for(let i=0;i<n;i+=size)groups.push(order.slice(i,i+size));return groups;}
+const count=Math.ceil(n/size);
+const base=Math.floor(n/count);
+const sizes=Array(count).fill(base);
+let extra=n-base*count;
+for(let i=0;i<extra;i++)sizes[i]++;
+let idx=0;for(const s of sizes){groups.push(order.slice(idx,idx+s));idx+=s;}
+return groups;
+}
+
+function signature(groups){return groups.map(g=>[...g].sort((a,b)=>a-b).join('-')).sort().join('|');}
+function pairPenalty(groups){
+if(groupSize!==2)return 0;let p=0;
+for(const g of groups){if(g.length===2){const key=[...g].sort((a,b)=>a-b).join('-');if(previousPairs.has(key))p++;}}
+return p;
+}
+function chooseBestGroups(){
+let best=null,bestPenalty=Infinity;
+for(let attempt=0;attempt<300;attempt++){
+const groups=buildGroups(shuffle(students),groupSize);
+const sig=signature(groups);
+const penalty=(sig===previousSignature?1000:0)+pairPenalty(groups);
+if(penalty<bestPenalty){bestPenalty=penalty;best=groups;if(penalty===0)break;}
+}
+return best;
+}
+function saveHistory(groups){
+previousSignature=signature(groups);
+previousPairs.clear();
+if(groupSize===2)groups.forEach(g=>{if(g.length===2)previousPairs.add([...g].sort((a,b)=>a-b).join('-'));});
+}
+function render(groups){
+groupsEl.innerHTML='';
+groups.forEach((g,i)=>{
+const card=document.createElement('div');card.className='group-card';
+const title=document.createElement('div');title.className='group-title';title.textContent=`GRUPO ${i+1}`;
+const members=document.createElement('div');members.className='members';
+g.forEach(n=>{
+const student=document.createElement('div');student.className='student';
+const m=document.createElement('div');m.className='member';m.textContent=n;
+const name=document.createElement('div');name.className='student-name';name.textContent=names[n]||'';
+student.append(m,name);members.appendChild(student);
+});
+card.append(title,members);groupsEl.appendChild(card);
+});
+}
+function runGrouping(){
+if(isMixing)return;
+isMixing=true; makeBtn.disabled=true; shuffleBtn.disabled=true; groupsEl.innerHTML='';
+mixingEl.textContent='🔀 ¡Mezclando! / Mixing it up!';
+let ticks=0;
+const t=setInterval(()=>{
+mixingEl.textContent=ticks%2===0?'🔀 ¡Mezclando! / Mixing it up!':'🎲 Casi... / Almost there...';
+ticks++;
+if(ticks>=8){
+clearInterval(t);
+const groups=chooseBestGroups();
+render(groups);saveHistory(groups);
+mixingEl.textContent='✨ ¡Listos! / Ready!';
+shuffleBtn.classList.remove('hidden');
+makeBtn.textContent='🎲 ¡FORMAR DE NUEVO!';
+makeBtn.disabled=false;shuffleBtn.disabled=false;isMixing=false;
+}
+},220);
+}
+makeBtn.addEventListener('click',runGrouping);
+shuffleBtn.addEventListener('click',runGrouping);
+resetBtn.addEventListener('click',()=>{
+groupSize=2;
+modeButtons.forEach(b=>b.classList.toggle('active',Number(b.dataset.size)===2));
+groupsEl.innerHTML='';mixingEl.textContent='';shuffleBtn.classList.add('hidden');
+makeBtn.textContent='🎲 ¡FORMAR GRUPOS!';previousSignature='';previousPairs.clear();
+});
+})();
+</script>
+</body>
+</html>
