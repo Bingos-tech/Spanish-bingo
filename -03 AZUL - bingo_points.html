@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLASE AZUL · Bingo Points</title>
+<style>
+  :root{
+    --accent: #2E7DD7;
+    --accent-dark: #1F5FA8;
+    --accent-soft: #EAF3FE;
+    --ink:#172033;
+    --muted:#657086;
+    --line:#D9DEE8;
+    --panel:#FFFFFF;
+    --page:#F5F7FA;
+    --gold:#E7B32B;
+    --gold-soft:#FFF8DB;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:var(--page);
+    color:var(--ink);
+  }
+  button,input{font:inherit}
+  button{cursor:pointer}
+  button:focus-visible,input:focus-visible{outline:3px solid rgba(46,125,215,.28);outline-offset:2px}
+
+  .wrap{max-width:1440px;margin:0 auto;padding:20px}
+  .hero{
+    display:flex;align-items:center;justify-content:space-between;gap:18px;
+    background:var(--panel);border:1px solid var(--line);border-radius:18px;
+    padding:18px 20px;margin-bottom:16px;
+  }
+  .hero-left{display:flex;align-items:center;gap:14px;min-width:0}
+  .class-dot{width:18px;height:58px;border-radius:999px;background:var(--accent);flex:0 0 auto}
+  h1{margin:0;font-size:clamp(28px,4vw,46px);line-height:.95;letter-spacing:-.03em}
+  .subtitle{margin-top:6px;color:var(--muted);font-weight:700;font-size:13px;letter-spacing:.08em}
+  .hero-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+  .secondary,.danger{
+    border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:12px;
+    padding:10px 13px;font-weight:800;min-height:42px;
+  }
+  .secondary:hover{border-color:var(--accent);color:var(--accent-dark)}
+  .danger{color:#9B2C2C}
+  .danger:hover{border-color:#C64545;background:#FFF6F6}
+
+  .topbar{
+    display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;
+    margin-bottom:14px;
+  }
+  .status{font-weight:800;color:var(--muted);font-size:14px}
+  .legend{
+    display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);
+    border-radius:999px;padding:8px 12px;font-size:13px;font-weight:800;color:var(--muted)
+  }
+  .legend b{color:var(--ink)}
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:12px;
+  }
+  .student-card{
+    position:relative;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-top:5px solid var(--accent);
+    border-radius:16px;
+    padding:14px;
+    min-width:0;
+    transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease;
+  }
+  .student-card.unlocked{
+    border-color:var(--gold);
+    border-top-color:var(--gold);
+    background:linear-gradient(180deg,var(--gold-soft),#fff 46%);
+    animation:unlockGlow .55s ease both;
+  }
+  @keyframes unlockGlow{
+    0%{transform:scale(.985)}
+    55%{transform:scale(1.018)}
+    100%{transform:scale(1)}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .student-card,.student-card.unlocked{animation:none;transition:none}
+  }
+
+  .card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+  .name{
+    font-weight:950;font-size:23px;line-height:1.06;letter-spacing:-.02em;
+    overflow-wrap:anywhere;min-width:0;
+  }
+  .menu-btn{
+    border:0;background:transparent;color:var(--muted);font-size:22px;line-height:1;
+    width:38px;height:38px;border-radius:10px;
+  }
+  .menu-btn:hover{background:#F0F2F6}
+  .menu{
+    position:absolute;right:12px;top:48px;z-index:5;background:white;border:1px solid var(--line);
+    border-radius:12px;padding:6px;box-shadow:0 10px 28px rgba(20,30,50,.14);display:none;min-width:140px;
+  }
+  .menu.open{display:block}
+  .menu button{
+    width:100%;border:0;background:white;text-align:left;padding:9px 10px;border-radius:8px;font-weight:750;
+  }
+  .menu button:hover{background:#F4F6F9}
+  .menu .remove{color:#A62A2A}
+
+  .score-row{display:flex;align-items:flex-end;justify-content:space-between;margin-top:10px;gap:8px}
+  .score-num{font-size:42px;font-weight:1000;line-height:1}
+  .score-label{color:var(--muted);font-size:12px;font-weight:900;letter-spacing:.07em;padding-bottom:4px}
+
+  .progress{
+    height:11px;background:#E9EDF3;border-radius:999px;overflow:hidden;margin:10px 0 12px
+  }
+  .progress > span{
+    display:block;height:100%;width:0;background:var(--accent);border-radius:inherit;
+    transition:width .22s ease
+  }
+  .unlocked .progress > span{background:var(--gold)}
+
+  .actions{display:grid;grid-template-columns:1fr 2.4fr;gap:8px}
+  .minus,.plus,.redeem{
+    border:0;border-radius:12px;font-weight:1000;min-height:48px;
+  }
+  .minus{background:#EDF0F4;color:#5E6674;font-size:22px}
+  .minus:disabled{opacity:.42;cursor:not-allowed}
+  .plus{background:var(--accent);color:white;font-size:24px}
+  .plus:hover{background:var(--accent-dark)}
+  .plus:disabled{background:#B8C0CC;cursor:not-allowed}
+  .unlocked-banner{
+    display:none;margin-top:10px;text-align:center;border-radius:10px;
+    background:#FFF0B5;color:#6A4B00;font-size:12px;font-weight:1000;letter-spacing:.07em;padding:8px
+  }
+  .unlocked .unlocked-banner{display:block}
+  .redeem{
+    display:none;width:100%;margin-top:8px;background:#1F7A4D;color:#fff;font-size:14px;padding:0 10px;
+  }
+  .unlocked .redeem{display:block}
+
+  .empty{
+    border:2px dashed var(--line);border-radius:16px;padding:36px;text-align:center;
+    color:var(--muted);font-weight:700;background:#fff;
+  }
+
+  dialog{
+    width:min(520px,calc(100% - 28px));border:0;border-radius:20px;padding:0;
+    box-shadow:0 24px 80px rgba(12,20,35,.28);
+  }
+  dialog::backdrop{background:rgba(15,20,30,.48)}
+  .modal{padding:22px}
+  .modal h2{margin:0 0 8px;font-size:27px;letter-spacing:-.02em}
+  .modal p{margin:8px 0;color:var(--muted);line-height:1.45}
+  .reward-head{text-align:center;padding:18px 14px 12px}
+  .reward-star{
+    width:52px;height:52px;border-radius:50%;margin:0 auto 10px;
+    display:grid;place-items:center;background:var(--gold-soft);border:2px solid var(--gold);
+    font-size:26px;
+  }
+  .reward-name{font-size:34px;font-weight:1000;line-height:1.05;margin:5px 0}
+  .reward-points{font-weight:950;color:#8A6400;letter-spacing:.08em;font-size:13px}
+  .reward-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+  .reward-choice{border:1px solid var(--line);border-radius:14px;padding:14px;background:#fff}
+  .reward-choice h3{margin:0 0 6px;font-size:16px}
+  .reward-choice p{font-size:12px;margin:0;color:var(--muted)}
+  .modal-actions{display:flex;gap:9px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
+  .primary{
+    border:0;border-radius:12px;padding:11px 14px;background:var(--accent);color:white;font-weight:900;
+    min-height:44px;
+  }
+  .confirm-danger{
+    border:0;border-radius:12px;padding:11px 14px;background:#B63232;color:white;font-weight:900;
+    min-height:44px;
+  }
+  .modal input{
+    width:100%;border:1px solid var(--line);border-radius:12px;padding:12px 13px;
+    margin-top:10px;font-size:16px;
+  }
+
+  @media (max-width:640px){
+    .wrap{padding:12px}
+    .hero{align-items:flex-start;padding:15px}
+    .hero,.hero-left{gap:10px}
+    .hero{flex-direction:column}
+    .hero-actions{width:100%;justify-content:flex-start}
+    .grid{grid-template-columns:1fr}
+    .reward-grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<div class="wrap" id="app">
+  <section class="hero">
+    <div class="hero-left">
+      <div class="class-dot" aria-hidden="true"></div>
+      <div>
+        <h1>CLASE AZUL</h1>
+        <div class="subtitle">BINGO POINTS · 20 POINTS = CHOOSE YOUR REWARD</div>
+      </div>
+    </div>
+    <div class="hero-actions">
+      <button class="secondary" id="addStudentBtn" type="button">+ Add Student</button>
+      <button class="secondary" id="backupBtn" type="button">Backup Points</button>
+      <button class="secondary" id="restoreBtn" type="button">Restore Points</button>
+      <input id="restoreFile" type="file" accept=".txt,.json,text/plain,application/json" hidden>
+      <button class="danger" id="resetAllBtn" type="button">Reset All Points</button>
+    </div>
+  </section>
+
+  <div class="topbar">
+    <div class="status" id="statusText"></div>
+    <div class="legend"><b>+1</b> per Bingo win · Reward at <b>20</b></div>
+  </div>
+
+  <main class="grid" id="studentGrid" aria-live="polite"></main>
+</div>
+
+<dialog id="nameDialog">
+  <form class="modal" id="nameForm">
+    <h2 id="nameDialogTitle">Add Student</h2>
+    <p id="nameDialogText">Enter the student's name.</p>
+    <input id="nameInput" maxlength="60" autocomplete="off" required aria-label="Student name">
+    <div class="modal-actions">
+      <button class="secondary" id="cancelNameBtn" type="button">Cancel</button>
+      <button class="primary" id="saveNameBtn" type="submit">Save</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="confirmDialog">
+  <div class="modal">
+    <h2 id="confirmTitle">Confirm</h2>
+    <p id="confirmText"></p>
+    <div class="modal-actions">
+      <button class="secondary" id="confirmCancel" type="button">Cancel</button>
+      <button class="confirm-danger" id="confirmYes" type="button">Confirm</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="rewardDialog">
+  <div class="modal">
+    <div class="reward-head">
+      <div class="reward-star" aria-hidden="true">★</div>
+      <div class="reward-points">REWARD UNLOCKED!</div>
+      <div class="reward-name" id="rewardName"></div>
+      <div class="reward-points">20 BINGO POINTS · CHOOSE YOUR REWARD</div>
+    </div>
+    <div class="reward-grid">
+      <div class="reward-choice">
+        <h3>HOMEWORK PASS</h3>
+        <p>Skip one regular Spanish homework assignment.</p>
+        <p><strong>Not valid for:</strong> Labs (videos or special assignments), projects, quizzes, tests, or classwork.</p>
+        <p>Teacher approval required.</p>
+      </div>
+      <div class="reward-choice">
+        <h3>COUCH WEEK PASS</h3>
+        <p>Sit on the couch during Spanish class for one full school week.</p>
+        <p>Regular classroom expectations still apply.</p>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="secondary" id="rewardClose" type="button">Close</button>
+      <button class="primary" id="rewardRedeem" type="button">Redeem Reward &amp; Start Over</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+(() => {
+  "use strict";
+  const STORAGE_KEY = "spanish_bingo_points_azul";
+  const DEFAULT_NAMES = ["Mason", "Gabby", "Audrey", "Mila", "Anthony", "Sistine", "Maximus", "Victoria L.", "Rose", "Emmett", "Victoria P.", "Tyler", "Nyle", "Matthew", "Graydon", "Jasper"];
+  const MAX_POINTS = 20;
+
+  const grid = document.getElementById("studentGrid");
+  const statusText = document.getElementById("statusText");
+  const addStudentBtn = document.getElementById("addStudentBtn");
+  const resetAllBtn = document.getElementById("resetAllBtn");
+  const backupBtn = document.getElementById("backupBtn");
+  const restoreBtn = document.getElementById("restoreBtn");
+  const restoreFile = document.getElementById("restoreFile");
+
+  const nameDialog = document.getElementById("nameDialog");
+  const nameForm = document.getElementById("nameForm");
+  const nameDialogTitle = document.getElementById("nameDialogTitle");
+  const nameInput = document.getElementById("nameInput");
+  const cancelNameBtn = document.getElementById("cancelNameBtn");
+
+  const confirmDialog = document.getElementById("confirmDialog");
+  const confirmTitle = document.getElementById("confirmTitle");
+  const confirmText = document.getElementById("confirmText");
+  const confirmCancel = document.getElementById("confirmCancel");
+  const confirmYes = document.getElementById("confirmYes");
+
+  const rewardDialog = document.getElementById("rewardDialog");
+  const rewardName = document.getElementById("rewardName");
+  const rewardClose = document.getElementById("rewardClose");
+  const rewardRedeem = document.getElementById("rewardRedeem");
+
+  let editId = null;
+  let confirmAction = null;
+  let rewardStudentId = null;
+
+  function makeId(index, name) {
+    return "student_" + index + "_" + name.toLowerCase().replace(/[^a-z0-9]+/g,"_").replace(/^_|_$/g,"");
+  }
+
+  function defaultState() {
+    return DEFAULT_NAMES.map((name, i) => ({ id: makeId(i+1, name), name, points: 0 }));
+  }
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return defaultState();
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return defaultState();
+      return parsed
+        .filter(s => s && typeof s.name === "string")
+        .map((s, i) => ({
+          id: String(s.id || ("student_saved_" + i + "_" + Date.now())),
+          name: s.name.trim() || "Student",
+          points: Math.max(0, Math.min(MAX_POINTS, Number.isFinite(Number(s.points)) ? Math.round(Number(s.points)) : 0))
+        }));
+    } catch (e) {
+      return defaultState();
+    }
+  }
+
+  let students = loadState();
+
+  function saveState() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(students)); }
+    catch (e) { /* App remains usable even if storage is unavailable. */ }
+  }
+
+  function esc(str) {
+    return String(str).replace(/[&<>"']/g, ch => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    })[ch]);
+  }
+
+
+  function downloadBackup() {
+    const now = new Date();
+    const dateText = now.toLocaleString("en-US", {
+      month: "long", day: "numeric", year: "numeric",
+      hour: "numeric", minute: "2-digit"
+    });
+
+    const readableLines = [
+      "SPANISH BINGO POINTS — CLASE AZUL",
+      "Backup: " + dateText,
+      "",
+      ...students.map(s => s.name + " — " + s.points + (s.points === 1 ? " point" : " points")),
+      "",
+      "----- BACKUP DATA FOR RESTORE -----",
+      JSON.stringify({
+        app: "Spanish Bingo Points Tracker",
+        storageKey: STORAGE_KEY,
+        savedAt: now.toISOString(),
+        students: students
+      })
+    ];
+
+    const blob = new Blob([readableLines.join("\n")], {type:"text/plain;charset=utf-8"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const date = now.toISOString().slice(0,10);
+    a.href = url;
+    a.download = STORAGE_KEY + "_backup_" + date + ".txt";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 500);
+  }
+
+  function validateRestorePayload(data) {
+    if (!data || !Array.isArray(data.students)) throw new Error("This is not a valid Bingo Points backup.");
+    return data.students.map((s, i) => {
+      if (!s || typeof s.name !== "string" || !s.name.trim()) throw new Error("The backup contains an invalid student.");
+      const p = Math.max(0, Math.min(MAX_POINTS, Math.round(Number(s.points) || 0)));
+      return {
+        id: String(s.id || ("student_restored_" + i + "_" + Date.now())),
+        name: s.name.trim(),
+        points: p
+      };
+    });
+  }
+
+  function render() {
+    statusText.textContent = `${students.length} students · ${students.filter(s => s.points === MAX_POINTS).length} reward${students.filter(s => s.points === MAX_POINTS).length === 1 ? "" : "s"} ready`;
+
+    if (!students.length) {
+      grid.innerHTML = '<div class="empty">No students yet. Use “+ Add Student” to begin.</div>';
+      return;
+    }
+
+    grid.innerHTML = students.map(s => {
+      const pct = Math.round((s.points / MAX_POINTS) * 100);
+      const unlocked = s.points === MAX_POINTS;
+      return `
+      <article class="student-card ${unlocked ? "unlocked" : ""}" data-id="${esc(s.id)}">
+        <div class="card-head">
+          <div class="name">${esc(s.name)}</div>
+          <button class="menu-btn" type="button" aria-label="Student options" aria-expanded="false">⋯</button>
+          <div class="menu">
+            <button type="button" data-action="edit">Edit name</button>
+            <button type="button" data-action="delete" class="remove">Delete student</button>
+          </div>
+        </div>
+        <div class="score-row">
+          <div class="score-num">${s.points}</div>
+          <div class="score-label">${s.points} / 20 POINTS</div>
+        </div>
+        <div class="progress" aria-label="${s.points} of 20 points">
+          <span style="width:${pct}%"></span>
+        </div>
+        <div class="actions">
+          <button class="minus" type="button" data-action="minus" ${s.points <= 0 ? "disabled" : ""} aria-label="Subtract one point from ${esc(s.name)}">−1</button>
+          <button class="plus" type="button" data-action="plus" ${unlocked ? "disabled" : ""} aria-label="Add one point to ${esc(s.name)}">+1</button>
+        </div>
+        <div class="unlocked-banner">REWARD UNLOCKED!</div>
+        <button class="redeem" type="button" data-action="redeem">Redeem Reward &amp; Start Over</button>
+      </article>`;
+    }).join("");
+  }
+
+  function findStudent(id) {
+    return students.find(s => s.id === id);
+  }
+
+  function setPoints(id, next) {
+    const s = findStudent(id);
+    if (!s) return;
+    const old = s.points;
+    s.points = Math.max(0, Math.min(MAX_POINTS, Math.round(next)));
+    saveState();
+    render();
+    if (old < MAX_POINTS && s.points === MAX_POINTS) openReward(s.id);
+  }
+
+  function openReward(id) {
+    const s = findStudent(id);
+    if (!s) return;
+    rewardStudentId = id;
+    rewardName.textContent = s.name;
+    if (typeof rewardDialog.showModal === "function") rewardDialog.showModal();
+  }
+
+  function redeem(id) {
+    const s = findStudent(id);
+    if (!s) return;
+    s.points = 0;
+    saveState();
+    render();
+    if (rewardDialog.open) rewardDialog.close();
+    rewardStudentId = null;
+  }
+
+  function openNameDialog(mode, id = null) {
+    editId = id;
+    const s = id ? findStudent(id) : null;
+    nameDialogTitle.textContent = mode === "edit" ? "Edit Student" : "Add Student";
+    nameInput.value = s ? s.name : "";
+    if (typeof nameDialog.showModal === "function") {
+      nameDialog.showModal();
+      setTimeout(() => nameInput.focus(), 0);
+    }
+  }
+
+  function askConfirm(title, text, action, buttonText = "Confirm") {
+    confirmTitle.textContent = title;
+    confirmText.textContent = text;
+    confirmYes.textContent = buttonText;
+    confirmAction = action;
+    if (typeof confirmDialog.showModal === "function") confirmDialog.showModal();
+  }
+
+  grid.addEventListener("click", (e) => {
+    const card = e.target.closest(".student-card");
+    if (!card) return;
+    const id = card.dataset.id;
+    const action = e.target.dataset.action;
+
+    if (e.target.classList.contains("menu-btn")) {
+      document.querySelectorAll(".menu.open").forEach(m => {
+        if (m !== card.querySelector(".menu")) m.classList.remove("open");
+      });
+      const menu = card.querySelector(".menu");
+      const open = menu.classList.toggle("open");
+      e.target.setAttribute("aria-expanded", String(open));
+      return;
+    }
+
+    if (!action) return;
+    const s = findStudent(id);
+    if (!s) return;
+
+    if (action === "plus") setPoints(id, s.points + 1);
+    if (action === "minus") setPoints(id, s.points - 1);
+    if (action === "redeem") openReward(id);
+    if (action === "edit") openNameDialog("edit", id);
+    if (action === "delete") {
+      askConfirm(
+        "Delete Student",
+        `Are you sure you want to delete ${s.name}? This will also delete their Bingo Points.`,
+        () => {
+          students = students.filter(x => x.id !== id);
+          saveState(); render();
+        },
+        "Delete"
+      );
+    }
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".menu-btn") && !e.target.closest(".menu")) {
+      document.querySelectorAll(".menu.open").forEach(m => m.classList.remove("open"));
+      document.querySelectorAll(".menu-btn[aria-expanded='true']").forEach(b => b.setAttribute("aria-expanded","false"));
+    }
+  });
+
+  addStudentBtn.addEventListener("click", () => openNameDialog("add"));
+
+  nameForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const name = nameInput.value.trim();
+    if (!name) return;
+    if (editId) {
+      const s = findStudent(editId);
+      if (s) s.name = name;
+    } else {
+      students.push({
+        id: "student_custom_" + Date.now() + "_" + Math.random().toString(36).slice(2,8),
+        name,
+        points: 0
+      });
+    }
+    saveState();
+    render();
+    nameDialog.close();
+    editId = null;
+  });
+
+  cancelNameBtn.addEventListener("click", () => {
+    editId = null;
+    nameDialog.close();
+  });
+
+  resetAllBtn.addEventListener("click", () => {
+    askConfirm(
+      "Reset All Points",
+      "Are you sure you want to reset ALL Bingo Points for this class?",
+      () => {
+        students.forEach(s => s.points = 0);
+        saveState(); render();
+      },
+      "Reset All"
+    );
+  });
+
+  confirmCancel.addEventListener("click", () => {
+    confirmAction = null;
+    confirmDialog.close();
+  });
+
+  confirmYes.addEventListener("click", () => {
+    const action = confirmAction;
+    confirmAction = null;
+    confirmDialog.close();
+    if (typeof action === "function") action();
+  });
+
+  rewardClose.addEventListener("click", () => {
+    rewardDialog.close();
+    rewardStudentId = null;
+  });
+
+  rewardRedeem.addEventListener("click", () => {
+    if (rewardStudentId) redeem(rewardStudentId);
+  });
+
+
+  backupBtn.addEventListener("click", downloadBackup);
+
+  restoreBtn.addEventListener("click", () => {
+    restoreFile.value = "";
+    restoreFile.click();
+  });
+
+  restoreFile.addEventListener("change", async () => {
+    const file = restoreFile.files && restoreFile.files[0];
+    if (!file) return;
+    try {
+      const raw = await file.text();
+      let data;
+      try {
+        data = JSON.parse(raw);
+      } catch (_) {
+        const marker = "----- BACKUP DATA FOR RESTORE -----";
+        const markerIndex = raw.indexOf(marker);
+        if (markerIndex === -1) throw new Error("This is not a valid Bingo Points backup.");
+        const jsonPart = raw.slice(markerIndex + marker.length).trim();
+        data = JSON.parse(jsonPart);
+      }
+      const restored = validateRestorePayload(data);
+      askConfirm(
+        "Restore Points",
+        "Restore this backup? Your current student names and points for this class will be replaced.",
+        () => {
+          students = restored;
+          saveState();
+          render();
+        },
+        "Restore"
+      );
+    } catch (err) {
+      alert(err && err.message ? err.message : "Unable to restore this backup.");
+    }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
