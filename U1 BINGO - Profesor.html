@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BINGO • UNIDAD 1 — Teacher</title>
+<style>
+:root{--yellow:#fff36a;--yb:#d9c900;--blue:#8fd3ff;--bb:#318dc7;--red:#ff987f;--rb:#cf5c45;--green:#8ddd72;--gb:#45a13f;--purple:#c9b5f7;--pb:#846cc3;--navy:#102a56}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;background:#fff;color:#000}
+body{overflow-x:hidden;overflow-y:auto}
+.page{min-height:100vh;padding:10px 18px 24px}
+h1{margin:0 0 8px;text-align:center;color:#087ee7;font-size:clamp(30px,4.2vh,48px);font-weight:1000}
+.stage{display:flex;justify-content:center;align-items:center}
+.current{width:min(54vh,540px);aspect-ratio:1/1;border:6px solid;border-radius:22px;padding:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:0 5px 17px #0002}
+.placeholder{color:#666;border-color:#b7bec7;font-size:clamp(24px,4vh,40px);font-weight:900}
+.yellow{background:var(--yellow);border-color:var(--yb)} .blue{background:var(--blue);border-color:var(--bb)}
+.red{background:var(--red);border-color:var(--rb)} .green{background:var(--green);border-color:var(--gb)}
+.purple{background:var(--purple);border-color:var(--pb)}
+.es{font-size:clamp(27px,5.5vh,64px);font-weight:1000;line-height:1.02;overflow-wrap:anywhere}
+.en{font-size:clamp(16px,2.7vh,30px);font-weight:800;line-height:1.06;color:#666;margin-top:12px;overflow-wrap:anywhere}
+.current.long .es{font-size:clamp(22px,4.5vh,52px)} .current.xlong .es{font-size:clamp(18px,3.7vh,43px)}
+.controls{display:flex;justify-content:center;gap:12px;margin:9px 0 8px}
+button{border:0;border-radius:11px;padding:8px 20px;font-size:clamp(14px,1.9vh,20px);font-weight:900;cursor:pointer}
+#prev{background:#e9edf3} #next{background:#ffd84a} #reset{background:#e84b4b;color:#fff}
+.progress{text-align:center;font-size:clamp(15px,2vh,21px);font-weight:900;color:#102a56;margin:2px 0 8px}
+.history-title{font-size:clamp(15px,1.9vh,20px);font-weight:1000;color:var(--navy);margin-bottom:7px}
+.history{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:10px 12px}
+.tile{width:100%;aspect-ratio:1/1;border:4px solid;border-radius:16px;padding:7px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.tes{font-size:clamp(11px,1.4vw,22px);font-weight:1000;line-height:1;overflow-wrap:anywhere}
+.ten{font-size:clamp(8px,.85vw,14px);font-weight:800;line-height:1.02;color:#666;margin-top:5px;overflow-wrap:anywhere}
+@media(max-width:1200px){.history{grid-template-columns:repeat(7,minmax(0,1fr))}}
+@media(max-width:1000px){.history{grid-template-columns:repeat(6,minmax(0,1fr))}}
+@media(max-width:800px){.history{grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}}
+
+/* Called-word cards: matching color border, never black */
+.tile.yellow{background:var(--yellow);border-color:var(--yb)}
+.tile.blue{background:var(--blue);border-color:var(--bb)}
+.tile.red{background:var(--red);border-color:var(--rb)}
+.tile.green{background:var(--green);border-color:var(--gb)}
+.tile.purple{background:var(--purple);border-color:var(--pb)}
+
+</style>
+</head>
+<body><div class="page">
+<h1>BINGO • UNIDAD 1</h1>
+<div class="stage"><div id="current" class="current placeholder">Press “Next call”</div></div>
+<div class="controls"><button id="prev">Previous</button><button id="next">Next call</button><button id="reset">Reset</button></div>
+<div id="progress" class="progress">0 called • 97 remaining</div>
+<div class="history-title">Calls already made</div>
+<div id="history" class="history"></div>
+</div>
+<script>
+const ITEMS=[{"es": "¡Hola!", "en": "Hello!", "color": "yellow"}, {"es": "¡Buenos días!", "en": "Good morning.", "color": "yellow"}, {"es": "¡Buenas tardes!", "en": "Good afternoon.", "color": "yellow"}, {"es": "¡Buenas noches!", "en": "good evening / good night", "color": "yellow"}, {"es": "¡Adiós!", "en": "Goodbye", "color": "yellow"}, {"es": "¡Hasta luego!", "en": "See you later", "color": "yellow"}, {"es": "nombre", "en": "name", "color": "yellow"}, {"es": "apellido", "en": "last name", "color": "yellow"}, {"es": "edad", "en": "age", "color": "yellow"}, {"es": "teléfono", "en": "telephone / phone", "color": "yellow"}, {"es": "número de teléfono", "en": "phone number", "color": "yellow"}, {"es": "móvil", "en": "cell phone", "color": "yellow"}, {"es": "correo electrónico", "en": "email", "color": "yellow"}, {"es": "país", "en": "country", "color": "yellow"}, {"es": "ciudad", "en": "city", "color": "yellow"}, {"es": "idioma", "en": "language", "color": "yellow"}, {"es": "español", "en": "Spanish", "color": "yellow"}, {"es": "inglés", "en": "English", "color": "yellow"}, {"es": "cumpleaños", "en": "birthday", "color": "yellow"}, {"es": "fecha", "en": "date", "color": "yellow"}, {"es": "mes", "en": "month", "color": "blue"}, {"es": "año", "en": "year", "color": "blue"}, {"es": "¿Cómo te llamas?", "en": "What is your name?", "color": "blue"}, {"es": "¿De dónde eres?", "en": "Where are you from?", "color": "blue"}, {"es": "¿Cuántos años tienes?", "en": "How old are you?", "color": "blue"}, {"es": "¿Cuál es tu número de teléfono?", "en": "What is your phone number?", "color": "blue"}, {"es": "¿Qué idiomas hablas?", "en": "What languages do you speak?", "color": "blue"}, {"es": "¿Cuándo es tu cumpleaños?", "en": "When is your birthday?", "color": "blue"}, {"es": "Me llamo…", "en": "My name is…", "color": "blue"}, {"es": "Soy de…", "en": "I am from…", "color": "blue"}, {"es": "Tengo… años", "en": "I am … years old", "color": "blue"}, {"es": "Mi número de teléfono es…", "en": "My phone number is…", "color": "blue"}, {"es": "Hablo…", "en": "I speak…", "color": "blue"}, {"es": "Mi cumpleaños es el…", "en": "My birthday is…", "color": "blue"}, {"es": "¿Qué?", "en": "What?", "color": "blue"}, {"es": "¿Quién? /¿Quiénes?", "en": "Who?", "color": "blue"}, {"es": "¿Cómo?", "en": "How?", "color": "blue"}, {"es": "¿De dónde?", "en": "Where from?", "color": "blue"}, {"es": "¿Cuándo?", "en": "When?", "color": "blue"}, {"es": "¿Cuántos? / ¿Cuántas?", "en": "How many?", "color": "blue"}, {"es": "¿Cuál?", "en": "Which? / What?", "color": "red"}, {"es": "hablar", "en": "to speak", "color": "red"}, {"es": "llamarse", "en": "to be called", "color": "red"}, {"es": "ser", "en": "to be", "color": "red"}, {"es": "tener", "en": "to have", "color": "red"}, {"es": "enero", "en": "January", "color": "red"}, {"es": "febrero", "en": "February", "color": "red"}, {"es": "marzo", "en": "March", "color": "red"}, {"es": "abril", "en": "April", "color": "red"}, {"es": "mayo", "en": "May", "color": "red"}, {"es": "junio", "en": "June", "color": "red"}, {"es": "julio", "en": "July", "color": "red"}, {"es": "agosto", "en": "August", "color": "red"}, {"es": "septiembre", "en": "September", "color": "red"}, {"es": "octubre", "en": "October", "color": "red"}, {"es": "noviembre", "en": "November", "color": "red"}, {"es": "diciembre", "en": "December", "color": "red"}, {"es": "la primavera", "en": "spring", "color": "red"}, {"es": "el verano", "en": "summer", "color": "red"}, {"es": "el otoño", "en": "fall / autumn", "color": "green"}, {"es": "el invierno", "en": "winter", "color": "green"}, {"es": "el", "en": "the (masculine singular)", "color": "green"}, {"es": "la", "en": "the (feminine singular)", "color": "green"}, {"es": "los", "en": "the (masculine plural)", "color": "green"}, {"es": "las", "en": "the (feminine plural)", "color": "green"}, {"es": "un", "en": "a / an (masculine)", "color": "green"}, {"es": "una", "en": "a / an (feminine)", "color": "green"}, {"es": "unos", "en": "some (masculine)", "color": "green"}, {"es": "unas", "en": "some (feminine)", "color": "green"}, {"es": "España", "en": "Spain", "color": "green"}, {"es": "español / española", "en": "Spanish", "color": "green"}, {"es": "México", "en": "Mexico", "color": "green"}, {"es": "mexicano / mexicana", "en": "Mexican", "color": "green"}, {"es": "Estados Unidos", "en": "United States", "color": "green"}, {"es": "estadounidense", "en": "American / from the United States", "color": "green"}, {"es": "Argentina", "en": "Argentina", "color": "green"}, {"es": "argentino / argentina", "en": "Argentinian", "color": "green"}, {"es": "Colombia", "en": "Colombia", "color": "green"}, {"es": "colombiano / colombiana", "en": "Colombian", "color": "purple"}, {"es": "Alemania", "en": "Germany", "color": "purple"}, {"es": "alemán / alemana", "en": "German", "color": "purple"}, {"es": "Francia", "en": "France", "color": "purple"}, {"es": "francés / francesa", "en": "French", "color": "purple"}, {"es": "Italia", "en": "Italy", "color": "purple"}, {"es": "italiano / italiana", "en": "Italian", "color": "purple"}, {"es": "francés", "en": "French", "color": "purple"}, {"es": "alemán", "en": "German", "color": "purple"}, {"es": "italiano", "en": "Italian", "color": "purple"}, {"es": "catalán", "en": "Catalan", "color": "purple"}, {"es": "gallego", "en": "Galician", "color": "purple"}, {"es": "euskera", "en": "Basque", "color": "purple"}, {"es": "masculino", "en": "masculine", "color": "purple"}, {"es": "femenino", "en": "feminine", "color": "purple"}, {"es": "singular", "en": "singular", "color": "purple"}, {"es": "plural", "en": "plural", "color": "purple"}, {"es": "sustantivo", "en": "noun", "color": "purple"}, {"es": "adjetivo", "en": "adjective", "color": "purple"}];
+let deck=[],pos=-1;
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function build(){deck=shuffle(ITEMS);pos=-1}
+function sizeClass(t){return t.length>29?' xlong':t.length>20?' long':''}
+function render(){
+ const c=document.getElementById('current'); c.innerHTML='';
+ if(pos<0){c.className='current placeholder';c.textContent='Press “Next call”';}
+ else{const x=deck[pos];c.className='current '+x.color+sizeClass(x.es);
+   const a=document.createElement('div');a.className='es';a.textContent=x.es;
+   const b=document.createElement('div');b.className='en';b.textContent=x.en;c.append(a,b);}
+ const called=pos+1;
+ document.getElementById('progress').textContent=called+' called • '+(deck.length-called)+' remaining';
+ const h=document.getElementById('history');h.innerHTML='';
+ for(let i=pos;i>=0;i--){const x=deck[i],t=document.createElement('div');t.className='tile '+x.color;
+   const a=document.createElement('div');a.className='tes';a.textContent=x.es;
+   const b=document.createElement('div');b.className='ten';b.textContent=x.en;t.append(a,b);h.append(t);}
+}
+document.getElementById('next').onclick=()=>{if(pos<deck.length-1){pos++;render()}};
+document.getElementById('prev').onclick=()=>{if(pos>=0){pos--;render()}};
+document.getElementById('reset').onclick=()=>{build();render()};
+build();render();
+</script></body></html>

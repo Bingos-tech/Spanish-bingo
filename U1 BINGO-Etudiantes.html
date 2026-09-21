@@ -1,0 +1,1058 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Unidad 1 Vocabulary Bingo — Students</title>
+<style>
+:root{
+  --yellow:#fff36a; --yellow-b:#d9c900;
+  --blue:#8fd3ff; --blue-b:#318dc7;
+  --red:#ff987f; --red-b:#cf5c45;
+  --green:#8ddd72; --green-b:#45a13f;
+  --purple:#c9b5f7; --purple-b:#846cc3;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  padding:18px;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#fff;
+  color:#111;
+}
+.wrap{max-width:1180px;margin:0 auto;text-align:center}
+h1{
+  margin:0;
+  font-size:clamp(58px,8vw,108px);
+  line-height:.95;
+  color:#087ee7;
+  -webkit-text-fill-color:#087ee7;
+  -webkit-text-stroke:3px #000;
+  paint-order:stroke fill;
+  letter-spacing:2px;
+  font-weight:1000;
+  text-shadow:none;
+}
+.instructions{
+  margin:12px 0 18px;
+  font-size:clamp(18px,2.6vw,32px);
+  font-weight:700;
+}
+.board{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:6px;
+  width:100%;
+}
+.header,.cell{
+  border:3px solid #111;
+  border-radius:10px;
+  min-width:0;
+}
+.header{
+  height:70px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:6px;
+  font-size:clamp(16px,2.2vw,29px);
+  font-weight:900;
+}
+.cell{
+  height:145px;
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  user-select:none;
+  isolation:isolate;
+}
+.cell:focus-visible{outline:5px solid #111;outline-offset:2px}
+.number{
+  position:relative;
+  z-index:2;
+  color:#000;
+  font-size:clamp(42px,6vw,76px);
+  font-weight:950;
+  line-height:.9;
+}
+.word{
+  position:relative;
+  z-index:2;
+  color:#000;
+  margin-top:9px;
+  padding:0 5px;
+  width:100%;
+  font-size:clamp(14px,1.8vw,25px);
+  line-height:1.05;
+  font-weight:800;
+  overflow-wrap:anywhere;
+}
+.yellow{background:var(--yellow);border-color:var(--yellow-b)}
+.blue{background:var(--blue);border-color:var(--blue-b)}
+.red{background:var(--red);border-color:var(--red-b)}
+.green{background:var(--green);border-color:var(--green-b)}
+.purple{background:var(--purple);border-color:var(--purple-b)}
+.header.yellow,.header.blue,.header.red,.header.green,.header.purple{border-color:#111}
+
+.free{
+  cursor:pointer;
+}
+.free .word{
+  font-size:clamp(22px,3vw,34px);
+  margin-top:0;
+  color:#000;
+}
+
+.bubble{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:min(112px,78%);
+  aspect-ratio:1;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  z-index:4;
+  pointer-events:none;
+  opacity:.93;
+  border:2px solid rgba(255,255,255,.85);
+  background:
+    radial-gradient(circle at 28% 20%, rgba(255,255,255,.95) 0 5%, rgba(255,255,255,.45) 6% 10%, transparent 21%),
+    radial-gradient(circle at 72% 76%, rgba(255,255,255,.26) 0 7%, transparent 27%),
+    conic-gradient(from 20deg,
+      rgba(255,75,145,.21),
+      rgba(255,217,72,.18),
+      rgba(112,255,203,.18),
+      rgba(88,185,255,.21),
+      rgba(178,111,255,.19),
+      rgba(255,75,145,.21));
+  box-shadow:
+    inset 0 0 13px rgba(255,255,255,.78),
+    inset 8px 9px 18px rgba(255,120,185,.08),
+    inset -8px -9px 18px rgba(75,115,255,.11),
+    0 3px 8px rgba(25,45,80,.17);
+  backdrop-filter:blur(.35px) saturate(1.2);
+  -webkit-backdrop-filter:blur(.35px) saturate(1.2);
+  animation:breathe 4.6s ease-in-out infinite;
+}
+.bubble::before{
+  content:"";
+  position:absolute;
+  width:26%;
+  height:12%;
+  left:17%;
+  top:14%;
+  border-radius:50%;
+  background:rgba(255,255,255,.68);
+  filter:blur(.4px);
+  transform:rotate(-28deg);
+}
+.bubble::after{
+  content:"";
+  position:absolute;
+  inset:7px;
+  border-radius:50%;
+  border-top:2px solid rgba(255,255,255,.8);
+  border-left:1px solid rgba(255,255,255,.38);
+  transform:rotate(-18deg);
+}
+@keyframes breathe{
+  0%{
+    transform:translate(-50%,-50%) translate(0,0) scale(1);
+  }
+  18%{
+    transform:translate(-50%,-50%) translate(1.5px,-2px) scale(1.012);
+  }
+  38%{
+    transform:translate(-50%,-50%) translate(-1px,-3px) scale(.996);
+  }
+  58%{
+    transform:translate(-50%,-50%) translate(-2px,-1px) scale(1.009);
+  }
+  78%{
+    transform:translate(-50%,-50%) translate(1px,1px) scale(1.003);
+  }
+  100%{
+    transform:translate(-50%,-50%) translate(0,0) scale(1);
+  }
+}
+to{opacity:0;transform:rotate(-28deg) scale(.35)}
+}
+28%{
+    transform:translate(-50%,-50%) scale(1.07,0.96);
+    opacity:.9;
+  }
+  52%{
+    transform:translate(-50%,-50%) scale(1.18,1.05);
+    opacity:.62;
+    filter:blur(.2px);
+  }
+  72%{
+    transform:translate(-50%,-50%) scale(1.30,0.92);
+    opacity:.28;
+    filter:blur(.7px);
+  }
+  100%{
+    transform:translate(-50%,-50%) scale(1.42,0.78);
+    opacity:0;
+    filter:blur(1.4px);
+  }
+}
+45%{
+    transform:translate(-50%,-50%) scale(1.02) rotate(7deg);
+    opacity:.72;
+  }
+  100%{
+    transform:translate(-50%,-50%) scale(1.34) rotate(14deg);
+    opacity:0;
+  }
+}
+
+.controls{margin:20px 0 4px}
+button{
+  border:0;
+  border-radius:16px;
+  padding:14px 28px;
+  min-height:52px;
+  background:#087ee7;
+  color:white;
+  font-size:clamp(18px,2vw,26px);
+  font-weight:900;
+  box-shadow:0 5px 0 #075da9;
+  cursor:pointer;
+}
+button:active{transform:translateY(3px);box-shadow:0 2px 0 #075da9}
+
+@media(max-width:760px){
+  body{padding:10px}
+  .board{gap:3px}
+  .header{height:55px;font-size:14px}
+  .cell{height:108px;border-width:2px;border-radius:7px}
+  .number{font-size:42px}
+  .word{font-size:12px;margin-top:5px}
+  .free .word{font-size:20px}
+}
+@media(prefers-reduced-motion:reduce){
+  .bubble,.bubble.popping,.splash{animation:none}
+}
+
+35%{opacity:.8}
+  100%{
+    transform:
+      translate(calc(-50% + var(--dx)),calc(-50% + var(--dy)))
+      rotate(calc(var(--r) + 95deg))
+      scale(.25);
+    opacity:0;
+  }
+}
+
+38%{
+    transform:translate(-50%,-50%) scale(1.03,1.08);
+    opacity:.75;
+  }
+  100%{
+    transform:translate(-50%,-50%) scale(1.30,1.18);
+    opacity:0;
+    border-radius:46% 55% 43% 58%;
+  }
+}
+
+
+/* --- ULTRAREALISTIC SOAP-BUBBLE POP --- */
+.bubble.popping{
+  animation:none !important;
+  overflow:visible;
+}
+.bubble.popping .membrane-tear,
+.bubble.popping .tension-wave,
+.bubble.popping .film-fragment,
+.bubble.popping .microdrop{
+  pointer-events:none;
+}
+
+.membrane-tear{
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  z-index:8;
+  background:
+    radial-gradient(circle at var(--px) var(--py),
+      transparent 0 2%,
+      rgba(255,255,255,.18) 2.5% 3.2%,
+      transparent 3.7% 7%),
+    conic-gradient(from 17deg at var(--px) var(--py),
+      rgba(255,255,255,.0) 0 7deg,
+      rgba(255,255,255,.56) 8deg 10deg,
+      rgba(115,210,255,.25) 11deg 13deg,
+      rgba(255,120,220,.20) 14deg 16deg,
+      rgba(255,255,255,0) 17deg 30deg);
+  -webkit-mask:
+    radial-gradient(circle at var(--px) var(--py),
+      transparent 0 5%,
+      #000 6% 18%,
+      transparent 19% 100%);
+  mask:
+    radial-gradient(circle at var(--px) var(--py),
+      transparent 0 5%,
+      #000 6% 18%,
+      transparent 19% 100%);
+  opacity:.95;
+  animation:tearExpand 270ms cubic-bezier(.12,.72,.18,1) forwards;
+}
+@keyframes tearExpand{
+  0%{
+    -webkit-mask-size:35% 35%;
+    mask-size:35% 35%;
+    -webkit-mask-repeat:no-repeat;
+    mask-repeat:no-repeat;
+    -webkit-mask-position:var(--px) var(--py);
+    mask-position:var(--px) var(--py);
+    opacity:.98;
+  }
+  48%{opacity:.82}
+  100%{
+    -webkit-mask-size:260% 260%;
+    mask-size:260% 260%;
+    -webkit-mask-repeat:no-repeat;
+    mask-repeat:no-repeat;
+    -webkit-mask-position:var(--px) var(--py);
+    mask-position:var(--px) var(--py);
+    opacity:0;
+  }
+}
+
+.tension-wave{
+  position:absolute;
+  left:var(--px);
+  top:var(--py);
+  width:8px;
+  height:8px;
+  margin:-4px 0 0 -4px;
+  border-radius:50%;
+  border:1.6px solid rgba(255,255,255,.82);
+  box-shadow:
+    0 0 3px rgba(110,205,255,.34),
+    inset 0 0 2px rgba(255,135,220,.22);
+  z-index:9;
+  opacity:.9;
+  animation:tensionWave 230ms ease-out forwards;
+}
+@keyframes tensionWave{
+  0%{transform:scale(.25,.18);opacity:.95}
+  55%{transform:scale(8.2,7.5);opacity:.52}
+  100%{transform:scale(13,11.7);opacity:0}
+}
+
+.film-fragment{
+  --tx:0px;
+  --ty:0px;
+  --rot:0deg;
+  --sx:1;
+  --sy:1;
+  position:absolute;
+  left:var(--px);
+  top:var(--py);
+  width:12px;
+  height:6px;
+  margin:-3px 0 0 -6px;
+  z-index:10;
+  border-radius:70% 35% 72% 42% / 55% 65% 40% 60%;
+  border-top:1px solid rgba(255,255,255,.82);
+  border-left:1px solid rgba(255,255,255,.38);
+  background:
+    linear-gradient(130deg,
+      rgba(255,255,255,.68),
+      rgba(110,210,255,.26) 38%,
+      rgba(255,125,220,.22) 68%,
+      rgba(255,255,255,.06));
+  box-shadow:inset 0 0 2px rgba(255,255,255,.72);
+  transform-origin:center;
+  animation:filmFly 290ms cubic-bezier(.16,.68,.22,1) forwards;
+}
+@keyframes filmFly{
+  0%{
+    transform:translate(0,0) rotate(var(--rot)) scale(var(--sx),var(--sy)) skewX(0deg);
+    opacity:.92;
+  }
+  35%{
+    opacity:.78;
+    transform:
+      translate(calc(var(--tx)*.35),calc(var(--ty)*.35))
+      rotate(calc(var(--rot) + 24deg))
+      scale(calc(var(--sx)*.95),calc(var(--sy)*1.08))
+      skewX(8deg);
+  }
+  100%{
+    transform:
+      translate(var(--tx),var(--ty))
+      rotate(calc(var(--rot) + 88deg))
+      scale(calc(var(--sx)*.42),calc(var(--sy)*.62))
+      skewX(18deg);
+    opacity:0;
+  }
+}
+
+.microdrop{
+  --tx:0px;
+  --ty:0px;
+  --d:2px;
+  position:absolute;
+  left:var(--px);
+  top:var(--py);
+  width:var(--d);
+  height:var(--d);
+  margin:calc(var(--d)*-.5) 0 0 calc(var(--d)*-.5);
+  z-index:11;
+  border-radius:50%;
+  background:rgba(255,255,255,.72);
+  box-shadow:0 0 1px rgba(105,205,255,.42);
+  opacity:.88;
+  animation:microFly 240ms ease-out forwards;
+}
+@keyframes microFly{
+  0%{transform:translate(0,0) scale(1);opacity:.9}
+  100%{transform:translate(var(--tx),var(--ty)) scale(.35);opacity:0}
+}
+
+/* The original membrane loses continuity from the click point outward,
+   rather than shrinking or fading as a whole. */
+.bubble.popping{
+  -webkit-mask:
+    radial-gradient(circle at var(--px) var(--py),
+      transparent 0 0%,
+      #000 1% 100%);
+  mask:
+    radial-gradient(circle at var(--px) var(--py),
+      transparent 0 0%,
+      #000 1% 100%);
+  animation:membraneCollapse 285ms cubic-bezier(.12,.7,.18,1) forwards !important;
+}
+@keyframes membraneCollapse{
+  0%{
+    -webkit-mask:
+      radial-gradient(circle at var(--px) var(--py),
+        transparent 0 1%,
+        #000 1.5% 100%);
+    mask:
+      radial-gradient(circle at var(--px) var(--py),
+        transparent 0 1%,
+        #000 1.5% 100%);
+    filter:none;
+    opacity:.95;
+  }
+  22%{
+    -webkit-mask:
+      radial-gradient(circle at var(--px) var(--py),
+        transparent 0 8%,
+        #000 10% 100%);
+    mask:
+      radial-gradient(circle at var(--px) var(--py),
+        transparent 0 8%,
+        #000 10% 100%);
+    opacity:.92;
+  }
+  52%{
+    -webkit-mask:
+      radial-gradient(circle at var(--px) var(--py),
+        transparent 0 35%,
+        #000 38% 100%);
+    mask:
+      radial-gradient(circle at var(--px) var(--py),
+        transparent 0 35%,
+        #000 38% 100%);
+    opacity:.82;
+  }
+  78%{
+    -webkit-mask:
+      radial-gradient(circle at var(--px) var(--py),
+        transparent 0 67%,
+        #000 71% 100%);
+    mask:
+      radial-gradient(circle at var(--px) var(--py),
+        transparent 0 67%,
+        #000 71% 100%);
+    opacity:.58;
+  }
+  100%{
+    -webkit-mask:
+      radial-gradient(circle at var(--px) var(--py),
+        transparent 0 103%,
+        #000 104% 100%);
+    mask:
+      radial-gradient(circle at var(--px) var(--py),
+        transparent 0 103%,
+        #000 104% 100%);
+    opacity:0;
+  }
+}
+
+
+
+/* --- BINGO DETECTOR --- */
+#bingoOverlay{
+  position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;
+  background:rgba(8,31,72,.34);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
+}
+#bingoOverlay.show{display:flex}
+#bingoCard{
+  width:min(560px,88vw);padding:38px 28px 30px;text-align:center;background:#fff;
+  border:8px solid #ffc400;border-radius:30px;box-shadow:0 22px 65px rgba(0,0,0,.30);
+}
+#bingoTitle{
+  margin:0 0 28px;font-size:clamp(64px,11vw,112px);line-height:.9;font-weight:1000;
+  color:#087ee7;-webkit-text-fill-color:#087ee7;-webkit-text-stroke:3px #063b82;
+  paint-order:stroke fill;text-shadow:0 5px 0 #ffd21f,0 9px 0 rgba(0,0,0,.12);
+  animation:bingoPop .55s cubic-bezier(.2,1.5,.4,1);
+}
+#continueCard{
+  background:#13a44a;box-shadow:0 5px 0 #08722f;font-size:22px;padding:14px 30px;
+}
+@keyframes bingoPop{0%{transform:scale(.45);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+
+</style>
+
+<style>
+.cell.bingo-winner{
+  overflow:visible!important;
+  z-index:8;
+}
+.cell.bingo-winner::after{
+  content:"";
+  position:absolute;
+  inset:5px;
+  border:5px solid #f5b800;
+  border-radius:12px;
+  box-shadow:
+    0 0 0 2px rgba(120,76,0,.42),
+    0 0 14px rgba(255,190,0,.80),
+    inset 0 0 10px rgba(255,220,70,.28);
+  pointer-events:none;
+  z-index:12;
+}
+.cell.bingo-new::after{
+  animation:goldBingoPulse .42s ease-in-out 5 alternate;
+}
+@keyframes goldBingoPulse{
+  from{transform:scale(.94);opacity:.48}
+  to{transform:scale(1.02);opacity:1}
+}
+</style>
+
+
+<style>
+/* Realistic polished-gold Bingo marker */
+.cell.bingo-winner::after{
+  content:"";
+  position:absolute;
+  inset:4px;
+  border:6px solid transparent;
+  border-radius:13px;
+  background:
+    linear-gradient(#fff0,#fff0) padding-box,
+    linear-gradient(
+      115deg,
+      #6f4300 0%,
+      #b97700 8%,
+      #ffe77a 18%,
+      #fff7bd 24%,
+      #d99a00 35%,
+      #7b4900 46%,
+      #ffd84a 58%,
+      #fff5a6 67%,
+      #b87300 79%,
+      #f7c52b 90%,
+      #754500 100%
+    ) border-box;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.95),
+    0 3px 5px rgba(92,53,0,.40),
+    0 0 12px rgba(255,193,24,.60),
+    inset 0 0 8px rgba(255,238,135,.32);
+  pointer-events:none;
+  z-index:12;
+}
+.cell.bingo-winner::before{
+  content:"";
+  position:absolute;
+  z-index:13;
+  pointer-events:none;
+  left:10px;
+  right:10px;
+  top:7px;
+  height:3px;
+  border-radius:999px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.98),#fff6b0,rgba(255,255,255,.98),transparent);
+  opacity:.92;
+  filter:blur(.15px);
+}
+.cell.bingo-new::after{
+  animation:realGoldPulse .46s ease-in-out 5 alternate;
+}
+.cell.bingo-new::before{
+  animation:goldGlint .72s ease-in-out 3;
+}
+@keyframes realGoldPulse{
+  from{transform:scale(.96);filter:brightness(.92);opacity:.72}
+  to{transform:scale(1.015);filter:brightness(1.22);opacity:1}
+}
+@keyframes goldGlint{
+  0%{transform:translateX(-22%);opacity:.20}
+  50%{opacity:1}
+  100%{transform:translateX(22%);opacity:.45}
+}
+</style>
+
+
+<style>
+/* Metallic gold outline only — never covers the number or word */
+.cell.bingo-winner::after{
+  content:"";
+  position:absolute;
+  inset:4px;
+  border-radius:13px;
+  padding:5px;
+  border:0!important;
+  background:linear-gradient(
+    115deg,
+    #704200 0%,
+    #c68400 10%,
+    #ffe46a 20%,
+    #fff4a8 26%,
+    #d89a00 37%,
+    #7b4900 48%,
+    #ffd43b 59%,
+    #fff2a0 68%,
+    #b66f00 80%,
+    #f3bf20 91%,
+    #704200 100%
+  )!important;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  box-shadow:
+    0 2px 4px rgba(91,52,0,.34),
+    0 0 9px rgba(255,190,18,.48)!important;
+  pointer-events:none;
+  z-index:12;
+}
+.cell.bingo-winner::before{
+  content:none!important;
+}
+</style>
+
+
+<style>
+/* Polished metallic silver outline only */
+.cell.bingo-winner::after{
+  background:linear-gradient(
+    115deg,
+    #555b62 0%,
+    #9da4aa 10%,
+    #eef2f5 20%,
+    #ffffff 27%,
+    #b8bec4 38%,
+    #676d73 48%,
+    #dfe4e8 59%,
+    #ffffff 68%,
+    #969da4 80%,
+    #d4d9dd 91%,
+    #5b6167 100%
+  )!important;
+  box-shadow:
+    0 2px 4px rgba(45,52,58,.32),
+    0 0 9px rgba(205,220,230,.68)!important;
+}
+</style>
+
+
+<style>
+/* Vocabulary text fitting: same Bingo design, adapted only so longer vocabulary remains readable */
+.cell .vocab-es{
+  position:relative;
+  z-index:2;
+  font-size:clamp(13px,1.55vw,22px);
+  line-height:1.05;
+  font-weight:1000;
+  text-align:center;
+  max-width:96%;
+  overflow-wrap:anywhere;
+}
+.cell .vocab-en{
+  position:relative;
+  z-index:2;
+  margin-top:5px;
+  font-size:clamp(9px,.92vw,13px);
+  line-height:1.05;
+  font-weight:800;
+  text-align:center;
+  max-width:94%;
+  overflow-wrap:anywhere;
+}
+.cell.long-vocab .vocab-es{font-size:clamp(10px,1.15vw,16px)}
+.cell.long-vocab .vocab-en{font-size:clamp(8px,.78vw,11px)}
+.cell.very-long-vocab .vocab-es{font-size:clamp(8px,.95vw,13px);line-height:1}
+.cell.very-long-vocab .vocab-en{font-size:clamp(7px,.70vw,10px);line-height:1}
+</style>
+
+
+<style>
+/* Vocabulary text colors */
+.cell .vocab-es{
+  color:#000000 !important;
+  -webkit-text-fill-color:#000000 !important;
+}
+.cell .vocab-en{
+  color:#666666 !important;
+  -webkit-text-fill-color:#666666 !important;
+}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <h1>¡BINGO!</h1>
+  <div class="instructions">Click on a box to mark it. Click again to pop the bubble!</div>
+  <div id="board" class="board" aria-label="Unidad 1 vocabulary bingo card"></div>
+  <div class="controls"><button id="newCard" type="button">Generate a new card</button></div>
+</div>
+
+<div id="bingoOverlay" role="dialog" aria-modal="true" aria-live="assertive">
+  <div id="bingoCard">
+    <div id="bingoTitle">BINGO!</div>
+    <button id="continueCard" type="button">Continue Playing</button>
+  </div>
+</div>
+
+<script>
+(()=>{
+  const board=document.getElementById('board');
+  const newCard=document.getElementById('newCard');
+  const bingoOverlay=document.getElementById('bingoOverlay');
+  const bingoTitle=document.getElementById('bingoTitle');
+  const continueCard=document.getElementById('continueCard');
+  let announcedWins=new Set();
+
+  const groups=[
+    {name:'AMARILLO', cls:'yellow', count:5},
+    {name:'AZUL', cls:'blue', count:5},
+    {name:'ROJO', cls:'red', count:4},
+    {name:'VERDE', cls:'green', count:5},
+    {name:'MORADO', cls:'purple', count:5}
+  ];
+
+  const vocabularyByColor={
+    yellow:[
+      {es:'¡Hola!',en:'Hello!'},
+      {es:'¡Buenos días!',en:'Good morning.'},
+      {es:'¡Buenas tardes!',en:'Good afternoon.'},
+      {es:'¡Buenas noches!',en:'good evening / good night'},
+      {es:'¡Adiós!',en:'Goodbye'},
+      {es:'¡Hasta luego!',en:'See you later'},
+      {es:'nombre',en:'name'},
+      {es:'apellido',en:'last name'},
+      {es:'edad',en:'age'},
+      {es:'teléfono',en:'telephone / phone'},
+      {es:'número de teléfono',en:'phone number'},
+      {es:'móvil',en:'cell phone'},
+      {es:'correo electrónico',en:'email'},
+      {es:'país',en:'country'},
+      {es:'ciudad',en:'city'},
+      {es:'idioma',en:'language'},
+      {es:'español',en:'Spanish'},
+      {es:'inglés',en:'English'},
+      {es:'cumpleaños',en:'birthday'},
+      {es:'fecha',en:'date'}
+    ],
+    blue:[
+      {es:'mes',en:'month'},
+      {es:'año',en:'year'},
+      {es:'¿Cómo te llamas?',en:'What is your name?'},
+      {es:'¿De dónde eres?',en:'Where are you from?'},
+      {es:'¿Cuántos años tienes?',en:'How old are you?'},
+      {es:'¿Cuál es tu número de teléfono?',en:'What is your phone number?'},
+      {es:'¿Qué idiomas hablas?',en:'What languages do you speak?'},
+      {es:'¿Cuándo es tu cumpleaños?',en:'When is your birthday?'},
+      {es:'Me llamo…',en:'My name is…'},
+      {es:'Soy de…',en:'I am from…'},
+      {es:'Tengo… años',en:'I am … years old'},
+      {es:'Mi número de teléfono es…',en:'My phone number is…'},
+      {es:'Hablo…',en:'I speak…'},
+      {es:'Mi cumpleaños es el…',en:'My birthday is…'},
+      {es:'¿Qué?',en:'What?'},
+      {es:'¿Quién? /¿Quiénes?',en:'Who?'},
+      {es:'¿Cómo?',en:'How?'},
+      {es:'¿De dónde?',en:'Where from?'},
+      {es:'¿Cuándo?',en:'When?'},
+      {es:'¿Cuántos? / ¿Cuántas?',en:'How many?'}
+    ],
+    red:[
+      {es:'¿Cuál?',en:'Which? / What?'},
+      {es:'hablar',en:'to speak'},
+      {es:'llamarse',en:'to be called'},
+      {es:'ser',en:'to be'},
+      {es:'tener',en:'to have'},
+      {es:'enero',en:'January'},
+      {es:'febrero',en:'February'},
+      {es:'marzo',en:'March'},
+      {es:'abril',en:'April'},
+      {es:'mayo',en:'May'},
+      {es:'junio',en:'June'},
+      {es:'julio',en:'July'},
+      {es:'agosto',en:'August'},
+      {es:'septiembre',en:'September'},
+      {es:'octubre',en:'October'},
+      {es:'noviembre',en:'November'},
+      {es:'diciembre',en:'December'},
+      {es:'la primavera',en:'spring'},
+      {es:'el verano',en:'summer'}
+    ],
+    green:[
+      {es:'el otoño',en:'fall / autumn'},
+      {es:'el invierno',en:'winter'},
+      {es:'el',en:'the (masculine singular)'},
+      {es:'la',en:'the (feminine singular)'},
+      {es:'los',en:'the (masculine plural)'},
+      {es:'las',en:'the (feminine plural)'},
+      {es:'un',en:'a / an (masculine)'},
+      {es:'una',en:'a / an (feminine)'},
+      {es:'unos',en:'some (masculine)'},
+      {es:'unas',en:'some (feminine)'},
+      {es:'España',en:'Spain'},
+      {es:'español / española',en:'Spanish'},
+      {es:'México',en:'Mexico'},
+      {es:'mexicano / mexicana',en:'Mexican'},
+      {es:'Estados Unidos',en:'United States'},
+      {es:'estadounidense',en:'American / from the United States'},
+      {es:'Argentina',en:'Argentina'},
+      {es:'argentino / argentina',en:'Argentinian'},
+      {es:'Colombia',en:'Colombia'}
+    ],
+    purple:[
+      {es:'colombiano / colombiana',en:'Colombian'},
+      {es:'Alemania',en:'Germany'},
+      {es:'alemán / alemana',en:'German'},
+      {es:'Francia',en:'France'},
+      {es:'francés / francesa',en:'French'},
+      {es:'Italia',en:'Italy'},
+      {es:'italiano / italiana',en:'Italian'},
+      {es:'francés',en:'French'},
+      {es:'alemán',en:'German'},
+      {es:'italiano',en:'Italian'},
+      {es:'catalán',en:'Catalan'},
+      {es:'gallego',en:'Galician'},
+      {es:'euskera',en:'Basque'},
+      {es:'masculino',en:'masculine'},
+      {es:'femenino',en:'feminine'},
+      {es:'singular',en:'singular'},
+      {es:'plural',en:'plural'},
+      {es:'sustantivo',en:'noun'},
+      {es:'adjetivo',en:'adjective'}
+    ]
+  };
+
+  function shuffled(items){
+    const a=[...items];
+    for(let i=a.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [a[i],a[j]]=[a[j],a[i]];
+    }
+    return a;
+  }
+
+
+  function playableCells(){
+    return [...board.querySelectorAll('.cell')];
+  }
+
+  function winningLines(){
+    const c=playableCells();
+    if(c.length!==25) return [];
+    const lines=[];
+    for(let r=0;r<5;r++) lines.push([0,1,2,3,4].map(k=>c[r*5+k]));
+    for(let col=0;col<5;col++) lines.push([0,1,2,3,4].map(r=>c[r*5+col]));
+    lines.push([0,6,12,18,24].map(i=>c[i]));
+    lines.push([4,8,12,16,20].map(i=>c[i]));
+    return lines;
+  }
+
+  function isMarked(cell){
+    return !!cell.querySelector('.bubble') && !cell.querySelector('.bubble.popping');
+  }
+
+  function checkBingo(){
+    const newWins=[];
+    winningLines().forEach((line,index)=>{
+      if(line.every(isMarked) && !announcedWins.has(index)){
+        announcedWins.add(index);
+        line.forEach(cell=>{
+        cell.classList.add('bingo-winner','bingo-new');
+        setTimeout(()=>cell.classList.remove('bingo-new'),2300);
+      });
+      newWins.push(index);
+      }
+    });
+    if(newWins.length){
+      bingoTitle.textContent = newWins.length>=2 ? 'DOUBLE BINGO!' : 'BINGO!';
+      bingoOverlay.classList.add('show');
+    }
+  }
+
+  function markCell(cell,event){
+    const existing=cell.querySelector('.bubble');
+
+    if(!existing){
+      const b=document.createElement('span');
+      b.className='bubble';
+      b.setAttribute('aria-hidden','true');
+      cell.appendChild(b);
+      cell.setAttribute('aria-pressed','true');
+      setTimeout(checkBingo,0);
+      return;
+    }
+
+    if(existing.classList.contains('popping')) return;
+
+    const rect=existing.getBoundingClientRect();
+    const clickX=event ? Math.max(0,Math.min(rect.width,event.clientX-rect.left)) : rect.width/2;
+    const clickY=event ? Math.max(0,Math.min(rect.height,event.clientY-rect.top)) : rect.height/2;
+    const px=(clickX/rect.width)*100;
+    const py=(clickY/rect.height)*100;
+
+    existing.style.setProperty('--px',px+'%');
+    existing.style.setProperty('--py',py+'%');
+    existing.classList.add('popping');
+    cell.setAttribute('aria-pressed','false');
+
+    const tear=document.createElement('span');
+    tear.className='membrane-tear';
+    tear.style.setProperty('--px',px+'%');
+    tear.style.setProperty('--py',py+'%');
+
+    const wave=document.createElement('span');
+    wave.className='tension-wave';
+    wave.style.setProperty('--px',px+'%');
+    wave.style.setProperty('--py',py+'%');
+
+    existing.append(tear,wave);
+
+    // Curved translucent membrane fragments. Small count, irregular trajectories.
+    const fragments=[
+      [-28,-12,-28,1.0,.72],[-18,-30,12,.82,.58],[4,-36,58,.72,.52],
+      [24,-27,104,.9,.62],[34,-8,148,.78,.56],[31,17,186,.88,.66],
+      [15,30,232,.72,.54],[-8,33,274,.82,.61],[-27,23,316,.9,.63],
+      [-34,4,352,.68,.48]
+    ];
+    fragments.forEach(([tx,ty,rot,sx,sy])=>{
+      const f=document.createElement('span');
+      f.className='film-fragment';
+      f.style.setProperty('--px',px+'%');
+      f.style.setProperty('--py',py+'%');
+      f.style.setProperty('--tx',tx+'px');
+      f.style.setProperty('--ty',ty+'px');
+      f.style.setProperty('--rot',rot+'deg');
+      f.style.setProperty('--sx',sx);
+      f.style.setProperty('--sy',sy);
+      existing.appendChild(f);
+    });
+
+    // Extremely small transparent droplets around the rupture.
+    const drops=[
+      [-20,-8,1.5],[-13,-20,2],[-2,-25,1.2],[10,-21,1.6],[21,-11,1.4],
+      [25,1,1.8],[18,14,1.3],[8,21,1.7],[-6,23,1.2],[-18,15,1.6],
+      [-24,4,1.3],[5,-12,1.1],[-9,8,1.1],[13,7,1.2]
+    ];
+    drops.forEach(([tx,ty,d])=>{
+      const m=document.createElement('span');
+      m.className='microdrop';
+      m.style.setProperty('--px',px+'%');
+      m.style.setProperty('--py',py+'%');
+      m.style.setProperty('--tx',tx+'px');
+      m.style.setProperty('--ty',ty+'px');
+      m.style.setProperty('--d',d+'px');
+      existing.appendChild(m);
+    });
+
+    setTimeout(()=>existing.remove(),320);
+  }
+
+  function makeCell(item,cls){
+    const cell=document.createElement('button');
+    cell.type='button';
+    cell.className='cell '+cls;
+    const totalLength=item.es.length+item.en.length;
+    if(totalLength>62) cell.classList.add('very-long-vocab');
+    else if(totalLength>38) cell.classList.add('long-vocab');
+    cell.setAttribute('aria-label',item.es+' — '+item.en);
+    cell.setAttribute('aria-pressed','false');
+
+    const spanish=document.createElement('div');
+    spanish.className='vocab-es';
+    spanish.textContent=item.es;
+    const english=document.createElement('div');
+    english.className='vocab-en';
+    english.textContent=item.en;
+    cell.append(spanish,english);
+    cell.addEventListener('click',(event)=>markCell(cell,event));
+    return cell;
+  }
+
+  function makeFree(){
+    const cell=document.createElement('button');
+    cell.type='button';
+    cell.className='cell red free';
+    cell.setAttribute('aria-label','Free space');
+    cell.setAttribute('aria-pressed','false');
+
+    const word=document.createElement('div');
+    word.className='word';
+    word.textContent='FREE';
+
+    cell.appendChild(word);
+    cell.addEventListener('click',(event)=>markCell(cell,event));
+    return cell;
+  }
+
+  function render(){
+    announcedWins=new Set();
+    bingoOverlay.classList.remove('show');
+    board.replaceChildren();
+
+    groups.forEach(g=>{
+      const h=document.createElement('div');
+      h.className='header '+g.cls;
+      h.textContent=g.name;
+      board.appendChild(h);
+    });
+
+    const cols=groups.map(g=>shuffled(vocabularyByColor[g.cls]).slice(0,g.count));
+    let redIndex=0;
+
+    for(let row=0;row<5;row++){
+      for(let col=0;col<5;col++){
+        if(row===2 && col===2){
+          board.appendChild(makeFree());
+          continue;
+        }
+        let item;
+        if(col===2){
+          item=cols[col][redIndex++];
+        }else{
+          item=cols[col][row];
+        }
+        board.appendChild(makeCell(item,groups[col].cls));
+      }
+    }
+  }
+
+  continueCard.addEventListener('click',()=>bingoOverlay.classList.remove('show'));
+  newCard.addEventListener('click',render);
+  render();
+})();
+</script>
+</body>
+</html>
