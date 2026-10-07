@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BINGO • LOS VERBOS — Teacher Caller</title>
+<style>
+:root{
+ --yellow:#fff36a;--yb:#d9c900;
+ --blue:#8fd3ff;--bb:#318dc7;
+ --red:#ff987f;--rb:#cf5c45;
+ --green:#8ddd72;--gb:#45a13f;
+ --purple:#c9b5f7;--pb:#846cc3;
+ --navy:#17345f;
+}
+*{box-sizing:border-box}
+body{margin:0;background:#fff;font-family:Arial,Helvetica,sans-serif;color:#111}
+.app{max-width:1120px;margin:0 auto;padding:14px 18px 28px}
+h1{margin:0;text-align:center;color:#087ee7;font-size:clamp(28px,4vw,46px);font-weight:1000;letter-spacing:.2px}
+.subtitle{text-align:center;color:#666;font-weight:700;font-size:15px;margin:4px 0 10px}
+.counter{text-align:center;color:#555;font-weight:800;font-size:15px;margin-bottom:10px}
+.current-wrap{display:flex;justify-content:center}
+.current{
+ width:min(42vw,390px);aspect-ratio:1;border:5px solid;border-radius:22px;
+ display:flex;align-items:center;justify-content:center;text-align:center;padding:22px;
+ box-shadow:0 7px 18px rgba(0,0,0,.12)
+}
+.current .es{font-size:clamp(30px,5vw,58px);font-weight:1000;line-height:1.02;color:#000}
+.current .en{font-size:clamp(16px,2.2vw,25px);font-weight:700;line-height:1.1;color:#666;margin-top:12px}
+.current.long .es{font-size:clamp(25px,4vw,48px)}
+.current.xlong .es{font-size:clamp(21px,3.3vw,39px)}
+.current.xlong .en{font-size:clamp(14px,1.8vw,21px)}
+.empty{background:#f5f7fa!important;border-color:#b8c0ca!important}
+.empty .es{color:#687382!important;font-size:clamp(24px,4vw,42px)!important}
+.controls{display:flex;justify-content:center;gap:10px;margin:12px 0 18px;flex-wrap:wrap}
+button{border:0;border-radius:10px;padding:10px 20px;font-size:16px;font-weight:900;cursor:pointer}
+#prev{background:#e7ebf0;color:#26384f}
+#next{background:#ffd84a;color:#111}
+#reset{background:#e7ebf0;color:#26384f}
+h2{text-align:left;color:var(--navy);font-size:22px;margin:5px 0 10px}
+.history{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:9px}
+.card{
+ aspect-ratio:1;border:3px solid;border-radius:13px;display:flex;align-items:center;
+ justify-content:center;text-align:center;padding:7px;overflow:hidden
+}
+.card .es{font-size:clamp(13px,1.6vw,19px);font-weight:1000;line-height:1.03;color:#000;overflow-wrap:anywhere}
+.card .en{font-size:clamp(9px,1vw,12px);font-weight:700;line-height:1.05;color:#666;margin-top:5px;overflow-wrap:anywhere}
+.card.long .es{font-size:clamp(11px,1.35vw,16px)}
+.card.xlong .es{font-size:clamp(9px,1.15vw,14px)}
+.card.xlong .en{font-size:clamp(8px,.9vw,10px)}
+.yellow{background:var(--yellow);border-color:var(--yb)}
+.blue{background:var(--blue);border-color:var(--bb)}
+.red{background:var(--red);border-color:var(--rb)}
+.green{background:var(--green);border-color:var(--gb)}
+.purple{background:var(--purple);border-color:var(--pb)}
+@media(max-width:900px){.history{grid-template-columns:repeat(6,minmax(0,1fr))}}
+@media(max-width:650px){.history{grid-template-columns:repeat(4,minmax(0,1fr))}.current{width:min(72vw,390px)}}
+</style>
+</head>
+<body>
+<main class="app">
+<h1>BINGO • LOS VERBOS</h1>
+<div class="subtitle">Teacher caller</div>
+<div id="counter" class="counter">0 called • 60 remaining</div>
+
+<div class="current-wrap">
+ <div id="current" class="current empty">
+  <div><div class="es">Ready to play!</div><div class="en">Press Next call</div></div>
+ </div>
+</div>
+
+<div class="controls">
+ <button id="prev">Previous</button>
+ <button id="next">Next call</button>
+ <button id="reset">Reset</button>
+</div>
+
+<h2>Calls already made</h2>
+<div id="history" class="history"></div>
+</main>
+
+<script>
+const ITEMS=[{"es": "yo", "en": "I", "color": "yellow"}, {"es": "tú", "en": "you (informal)", "color": "yellow"}, {"es": "usted", "en": "you (formal)", "color": "yellow"}, {"es": "él", "en": "he", "color": "yellow"}, {"es": "ella", "en": "she", "color": "yellow"}, {"es": "nosotros", "en": "we (masculine / mixed)", "color": "yellow"}, {"es": "nosotras", "en": "we (feminine)", "color": "yellow"}, {"es": "ustedes", "en": "you all", "color": "yellow"}, {"es": "ellos", "en": "they (masculine / mixed)", "color": "yellow"}, {"es": "ellas", "en": "they (feminine)", "color": "yellow"}, {"es": "yo hablo", "en": "I speak", "color": "yellow"}, {"es": "tú hablas", "en": "you speak", "color": "yellow"}, {"es": "usted habla", "en": "you speak (formal)", "color": "blue"}, {"es": "él habla", "en": "he speaks", "color": "blue"}, {"es": "ella habla", "en": "she speaks", "color": "blue"}, {"es": "nosotros hablamos", "en": "we speak", "color": "blue"}, {"es": "nosotras hablamos", "en": "we speak", "color": "blue"}, {"es": "ustedes hablan", "en": "you all speak", "color": "blue"}, {"es": "ellos hablan", "en": "they speak", "color": "blue"}, {"es": "ellas hablan", "en": "they speak", "color": "blue"}, {"es": "yo me llamo", "en": "my name is / I am called", "color": "blue"}, {"es": "tú te llamas", "en": "your name is / you are called", "color": "blue"}, {"es": "usted se llama", "en": "your name is / you are called (formal)", "color": "blue"}, {"es": "él se llama", "en": "his name is / he is called", "color": "blue"}, {"es": "ella se llama", "en": "her name is / she is called", "color": "red"}, {"es": "nosotros nos llamamos", "en": "our names are / we are called", "color": "red"}, {"es": "nosotras nos llamamos", "en": "our names are / we are called", "color": "red"}, {"es": "ustedes se llaman", "en": "your names are / you all are called", "color": "red"}, {"es": "ellos se llaman", "en": "their names are / they are called", "color": "red"}, {"es": "ellas se llaman", "en": "their names are / they are called", "color": "red"}, {"es": "yo soy", "en": "I am", "color": "red"}, {"es": "tú eres", "en": "you are", "color": "red"}, {"es": "usted es", "en": "you are (formal)", "color": "red"}, {"es": "él es", "en": "he is", "color": "red"}, {"es": "ella es", "en": "she is", "color": "red"}, {"es": "nosotros somos", "en": "we are", "color": "red"}, {"es": "nosotras somos", "en": "we are", "color": "green"}, {"es": "ustedes son", "en": "you all are", "color": "green"}, {"es": "ellos son", "en": "they are", "color": "green"}, {"es": "ellas son", "en": "they are", "color": "green"}, {"es": "yo tengo", "en": "I have", "color": "green"}, {"es": "tú tienes", "en": "you have", "color": "green"}, {"es": "usted tiene", "en": "you have (formal)", "color": "green"}, {"es": "él tiene", "en": "he has", "color": "green"}, {"es": "ella tiene", "en": "she has", "color": "green"}, {"es": "nosotros tenemos", "en": "we have", "color": "green"}, {"es": "nosotras tenemos", "en": "we have", "color": "green"}, {"es": "ustedes tienen", "en": "you all have", "color": "green"}, {"es": "ellos tienen", "en": "they have", "color": "purple"}, {"es": "ellas tienen", "en": "they have", "color": "purple"}, {"es": "yo vivo", "en": "I live", "color": "purple"}, {"es": "tú vives", "en": "you live", "color": "purple"}, {"es": "usted vive", "en": "you live (formal)", "color": "purple"}, {"es": "él vive", "en": "he lives", "color": "purple"}, {"es": "ella vive", "en": "she lives", "color": "purple"}, {"es": "nosotros vivimos", "en": "we live", "color": "purple"}, {"es": "nosotras vivimos", "en": "we live", "color": "purple"}, {"es": "ustedes viven", "en": "you all live", "color": "purple"}, {"es": "ellos viven", "en": "they live", "color": "purple"}, {"es": "ellas viven", "en": "they live", "color": "purple"}];
+let deck=[], called=[], currentIndex=-1;
+const current=document.getElementById('current');
+const history=document.getElementById('history');
+const counter=document.getElementById('counter');
+
+function shuffle(a){
+ a=[...a];
+ for(let i=a.length-1;i>0;i--){
+   const j=Math.floor(Math.random()*(i+1));
+   [a[i],a[j]]=[a[j],a[i]];
+ }
+ return a;
+}
+function sizeClass(x){
+ if(x.es.length>20 || x.en.length>34) return 'xlong';
+ if(x.es.length>14 || x.en.length>25) return 'long';
+ return '';
+}
+function drawCurrent(x){
+ current.className='current '+x.color+' '+sizeClass(x);
+ current.innerHTML=`<div><div class="es">${x.es}</div><div class="en">${x.en}</div></div>`;
+}
+function render(){
+ history.innerHTML='';
+ [...called].reverse().forEach(x=>{
+   const c=document.createElement('div');
+   c.className='card '+x.color+' '+sizeClass(x);
+   c.innerHTML=`<div><div class="es">${x.es}</div><div class="en">${x.en}</div></div>`;
+   history.append(c);
+ });
+ counter.textContent=`${called.length} called • ${ITEMS.length-called.length} remaining`;
+ if(called.length) drawCurrent(called[called.length-1]);
+ else{
+   current.className='current empty';
+   current.innerHTML='<div><div class="es">Ready to play!</div><div class="en">Press Next call</div></div>';
+ }
+}
+function next(){
+ if(!deck.length) return;
+ called.push(deck.shift());
+ render();
+}
+function previous(){
+ if(!called.length) return;
+ deck.unshift(called.pop());
+ render();
+}
+function reset(){
+ deck=shuffle(ITEMS);
+ called=[];
+ render();
+}
+document.getElementById('next').onclick=next;
+document.getElementById('prev').onclick=previous;
+document.getElementById('reset').onclick=reset;
+reset();
+</script>
+</body>
+</html>
