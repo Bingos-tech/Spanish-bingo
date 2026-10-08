@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>POP! · Individual Conjugation Practice</title>
+<style>
+:root{--navy:#12254d;--blue:#1675e8;--gold:#ffc83d;--green:#19a66a;--red:#ed4154}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#10274f,#1b4b91);font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:var(--navy);min-height:100vh}
+main{max-width:1080px;margin:auto;padding:14px}.shell{background:#f7fbff;border:5px solid #80bdfd;border-radius:25px;box-shadow:0 12px 0 #0a1d3f;padding:18px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px}h1{margin:0;color:var(--navy);font-size:clamp(24px,4vw,39px);letter-spacing:-1px}.sub{color:#58708e;font-weight:800;font-size:12px;letter-spacing:2px}
+.pill{background:#e3efff;padding:10px 15px;border-radius:20px;font-weight:900}
+.challenge{margin-top:15px;text-align:center;background:#e8f3ff;border:3px solid #c4dffc;border-radius:22px;padding:17px 10px}
+.eyebrow{font-size:14px;font-weight:900;letter-spacing:2px;color:#47739e}.question{font-size:clamp(33px,6.5vw,68px);font-weight:1000;letter-spacing:-2px;line-height:1.25;margin:9px 0}
+.tens{font-size:14px;font-weight:900;color:#5679a3}.howto{text-align:center;font-weight:750;color:#355a83;font-size:14px;margin:10px auto 0;max-width:850px}.middle{display:flex;align-items:center;justify-content:center;gap:40px;margin:13px 0}.bubble-stage{width:clamp(135px,21vw,205px);height:clamp(135px,21vw,205px);display:grid;place-items:center;position:relative;overflow:visible}
+.bubble{width:110px;height:110px;border-radius:50%;position:relative;transform:scale(.36);opacity:.85;will-change:transform;box-shadow:inset -12px -13px 26px rgba(44,93,170,.17),inset 9px 9px 24px rgba(255,255,255,.95),0 7px 23px rgba(45,93,170,.18);border:2px solid rgba(188,225,255,.75);background:radial-gradient(ellipse at 26% 21%,rgba(255,255,255,.94) 0 4%,transparent 19%),radial-gradient(ellipse at 77% 72%,rgba(154,241,255,.25),transparent 49%),conic-gradient(from 32deg,rgba(245,154,228,.36),rgba(145,234,255,.28),rgba(255,240,163,.29),rgba(179,158,255,.27),rgba(245,154,228,.36));}
+.bubble:before{content:"";position:absolute;top:11%;left:16%;width:37%;height:15%;border-radius:50%;transform:rotate(-34deg);background:rgba(255,255,255,.83);filter:blur(3px)}
+.bubble:after{content:"";position:absolute;right:10%;bottom:15%;width:22%;height:9%;border-radius:50%;transform:rotate(-36deg);background:rgba(255,255,255,.68);filter:blur(2px)}
+.bubble.pop{animation:pop .24s ease-out forwards!important}
+@keyframes pop{0%{opacity:1;filter:brightness(1)}45%{transform:scale(2.4);opacity:.9;filter:brightness(1.7)}100%{transform:scale(2.8);opacity:0;filter:brightness(2)}}
+.pop-text{position:absolute;font-size:45px;font-weight:1000;color:#e74470;text-shadow:0 3px white;opacity:0;pointer-events:none}.pop-text.show{animation:popword .7s ease-out forwards}@keyframes popword{15%{opacity:1;transform:scale(1.3)}85%{opacity:1}100%{opacity:0;transform:scale(1.65)}}
+@keyframes bob{to{transform:translateY(-8px) rotate(6deg)}}.ring{width:155px;height:155px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--green) 360deg,#dbe8f6 0);box-shadow:0 5px 0 #bed5f0}
+.ring span{width:125px;height:125px;border-radius:50%;background:white;display:grid;place-items:center;font-size:67px;font-weight:1000}
+.controls{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}.btn{border:0;border-radius:15px;padding:15px 22px;font-weight:1000;font-size:19px;cursor:pointer;box-shadow:0 5px 0 #0d2549;transition:transform .1s}.btn:active{transform:translateY(4px);box-shadow:0 1px 0 #0d2549}.btn:disabled{opacity:.4;cursor:not-allowed}.start{background:#28b879;color:white}.next{background:var(--gold);color:var(--navy);min-width:225px}.secondary{background:#e0ecfa;color:var(--navy);font-size:15px}
+.status{text-align:center;font-size:18px;font-weight:900;min-height:29px;margin:12px 0 3px}.stats{display:flex;justify-content:center;gap:16px;font-weight:800;color:#456588;margin:6px}
+.review{background:white;border:2px solid #cfdef2;border-radius:19px;padding:14px;margin-top:15px}.reviewhead{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}.review h2{margin:0;font-size:21px}.hint{font-size:12px;color:#63768f;margin:5px 0 9px}
+#list{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px;max-height:140px;overflow:auto}
+.item{background:#fff4e6;border-left:5px solid #f3a33c;padding:9px 12px;border-radius:8px;font-weight:800}.item small{display:block;color:#795d42;font-size:12px}
+.empty{color:#789;font-weight:700;padding:10px}.boom .shell{animation:shake .2s 4;border-color:#ff5360}.boom .challenge{background:#ffe2e4;border-color:#f44}.boom .bubble{animation:pop .24s ease-out forwards}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.answer{font-size:clamp(22px,4vw,37px);font-weight:1000;color:#bd233d;margin:6px 0 0}
+@media(max-width:570px){main{padding:7px}.shell{padding:12px}.howto{text-align:center;font-weight:750;color:#355a83;font-size:14px;margin:10px auto 0;max-width:850px}.middle{gap:12px}.ring{width:125px;height:125px}.ring span{width:99px;height:99px;font-size:53px}.bubble-stage{width:125px;height:125px}.btn{padding:13px 16px}.review{margin-top:12px}}
+</style></head><body><main><div class="shell">
+<header><div><div class="sub">SPANISH · PRESENT TENSE</div><h1>🫧 POP! CHALLENGE</h1></div><div class="pill">SOLO · 10 SECONDS</div></header>
+<section class="challenge"><div class="eyebrow">SAY THE CORRECT CONJUGATION OUT LOUD</div><div id="question" class="question">READY?</div><div class="tens">HABLAR · LLAMARSE · SER · TENER</div><div id="answer" class="answer" hidden></div></section>
+<p class="howto">Press START. Say the conjugation aloud, then tap NEXT before 10 seconds to check your answer. Tap NEXT again to continue. If the bubble pops, the conjugation is added to your practice list.</p><div class="middle"><div class="bubble-stage" aria-hidden="true"><div class="bubble" id="bubble"></div><div class="pop-text" id="popword">POP!</div></div><div id="ring" class="ring"><span id="seconds">10</span></div></div>
+<div class="controls"><button class="btn start" id="start">▶ START</button><button class="btn next" id="next" disabled>NEXT</button><button class="btn secondary" id="sound">🔊 SOUND ON</button><button class="btn secondary" id="reset">↻ NEW GAME</button></div>
+<div class="status" id="status" aria-live="polite">Press START to grow your first bubble!</div><div class="stats"><span id="done">Completed: 0</span><span id="missed">Practice: 0</span></div>
+<section class="review"><div class="reviewhead"><h2>📚 CONJUGATIONS TO PRACTICE</h2><button class="btn secondary" id="copy">📋 COPY LIST</button></div><p class="hint">Review these conjugations at home to improve your Spanish. When the bubble pops, its conjugation and correct answer are saved here.</p><div id="list"><div class="empty">No conjugations to review yet. Keep going!</div></div></section>
+</div></main>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const pronouns=['YO','TÚ','ÉL','ELLA','USTED','NOSOTROS','NOSOTRAS','VOSOTROS','VOSOTRAS','ELLOS','ELLAS','USTEDES'];
+const verbs={
+'HABLAR':['hablo','hablas','habla','habla','habla','hablamos','hablamos','habláis','habláis','hablan','hablan','hablan'],
+'LLAMARSE':['me llamo','te llamas','se llama','se llama','se llama','nos llamamos','nos llamamos','os llamáis','os llamáis','se llaman','se llaman','se llaman'],
+'SER':['soy','eres','es','es','es','somos','somos','sois','sois','son','son','son'],
+'TENER':['tengo','tienes','tiene','tiene','tiene','tenemos','tenemos','tenéis','tenéis','tienen','tienen','tienen']};
+const full=Object.entries(verbs).flatMap(([verb,forms])=>pronouns.map((subject,i)=>({verb,subject,answer:forms[i],key:verb+'|'+subject})));
+let pool=[],current=null,active=false,deadline=0,timer=null,soundOn=true,audio=null,completed=0,review=new Map(),generation=0,checking=false;
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function beep(freq=520,duration=.12,type='sine',vol=.08){if(!soundOn)return;try{audio=audio||new(window.AudioContext||window.webkitAudioContext)();if(audio.state==='suspended')audio.resume();let osc=audio.createOscillator(),gain=audio.createGain();osc.type=type;osc.frequency.setValueAtTime(freq,audio.currentTime);gain.gain.setValueAtTime(vol,audio.currentTime);gain.gain.exponentialRampToValueAtTime(.001,audio.currentTime+duration);osc.connect(gain);gain.connect(audio.destination);osc.start();osc.stop(audio.currentTime+duration)}catch(e){}}
+function popSound(){beep(850,.075,'sine',.12);setTimeout(()=>beep(330,.13,'triangle',.15),55)}
+function cancel(){generation++;if(timer!==null)clearInterval(timer);timer=null;active=false}
+function pick(){if(!pool.length)pool=shuffle(full);current=pool.pop();$('question').textContent=current.subject+' + '+current.verb;$('answer').hidden=true;$('answer').textContent=''}
+function paint(ms){let left=Math.max(0,ms),s=Math.ceil(left/1000),ratio=left/10000;if(active){$('bubble').style.transform=`scale(${.38+1.75*(1-ratio)})`;} let color=s<=1?'#ed4154':s<=3?'#f28d2c':s<=6?'#e7bb27':'#19a66a';$('seconds').textContent=s;$('seconds').style.color=color;$('ring').style.background=`conic-gradient(${color} ${ratio*360}deg,#dbe8f6 0)`}
+function startTurn(){cancel();checking=false;$('next').textContent='NEXT';document.body.classList.remove('boom');$('bubble').classList.remove('pop');$('popword').classList.remove('show');$('bubble').style.opacity='1';pick();active=true;deadline=performance.now()+10000;paint(10000);$('next').disabled=false;$('start').disabled=true;$('status').textContent='Say the answer, then press NEXT!';let myGeneration=generation,last=10;timer=setInterval(()=>{if(myGeneration!==generation)return;let remaining=deadline-performance.now();if(remaining<=0){boom();return}let s=Math.ceil(remaining/1000);if(s!==last){last=s;beep(s<=3?680:460,.07)}paint(remaining)},40)}
+function boom(){if(!active)return;cancel();paint(0);$('next').disabled=false;checking=true;$('next').textContent='NEXT';$('start').disabled=true;document.body.classList.add('boom');$('bubble').classList.add('pop');$('popword').classList.remove('show');void $('popword').offsetWidth;$('popword').classList.add('show');$('answer').textContent='✓ '+current.answer;$('answer').hidden=false;$('status').textContent='🫧 POP! Added to CONJUGATIONS TO PRACTICE.';review.set(current.key,{...current});render();popSound()}
+function render(){$('done').textContent='Completed: '+completed;$('missed').textContent='Practice: '+review.size;let items=[...review.values()];$('list').innerHTML='';if(!items.length){let d=document.createElement('div');d.className='empty';d.textContent='No conjugations to review yet. Keep going!';$('list').append(d);return}for(let v of items){let d=document.createElement('div');d.className='item';d.textContent=v.subject+' + '+v.verb+' → '+v.answer;$('list').append(d)}}
+$('start').onclick=()=>{beep(740,.1);startTurn()};
+$('next').onclick=()=>{if(checking){beep(850,.09);startTurn();return}if(!active)return;if(performance.now()>=deadline){boom();return}cancel();checking=true;completed++;$('answer').textContent='✓ '+current.answer;$('answer').hidden=false;$('next').textContent='NEXT';$('status').textContent='Check your answer. Press NEXT to continue!';beep(740,.12);render()};
+$('reset').onclick=()=>{cancel();checking=false;$('next').textContent='NEXT';pool=[];current=null;completed=0;review.clear();document.body.classList.remove('boom');$('bubble').classList.remove('pop');$('bubble').style.transform='scale(.36)';$('bubble').style.opacity='1';$('popword').classList.remove('show');$('question').textContent='READY?';$('answer').hidden=true;$('next').disabled=true;$('start').disabled=false;$('start').textContent='▶ START';$('status').textContent='Press START to grow your first bubble!';paint(10000);render()};
+$('sound').onclick=()=>{soundOn=!soundOn;$('sound').textContent=soundOn?'🔊 SOUND ON':'🔇 SOUND OFF';if(soundOn)beep()};
+$('copy').onclick=async()=>{let txt=[...review.values()].map(v=>`${v.subject} + ${v.verb} → ${v.answer}`).join('\n');if(!txt){$('status').textContent='No conjugations to copy yet.';return}try{await navigator.clipboard.writeText('CONJUGATIONS TO PRACTICE\n'+txt);$('status').textContent='📋 List copied!'}catch(e){let t=document.createElement('textarea');t.value='CONJUGATIONS TO PRACTICE\n'+txt;document.body.append(t);t.select();document.execCommand('copy');t.remove();$('status').textContent='📋 List copied!'}};
+paint(10000);
+</script></body></html>
